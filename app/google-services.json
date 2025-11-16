@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "915223944290",
+    "project_id": "lofo90210",
+    "storage_bucket": "lofo90210.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:915223944290:android:af75267ebd0de5d705453b",
+        "android_client_info": {
+          "package_name": "com.example.myapplication"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "915223944290-i7j52i01eoeijfmactc4kl962ga85ejg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.myapplication",
+            "certificate_hash": "896f1e96daa3ab64131d034fbd56866c07ec8379"
+          }
+        },
+        {
+          "client_id": "915223944290-eh7agu37esvp3mas2klf593gsur9mmao.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAe-3BgACThDeL4LQlkoJMtkPxUbQegmDk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "915223944290-eh7agu37esvp3mas2klf593gsur9mmao.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

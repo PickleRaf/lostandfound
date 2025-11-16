@@ -1,0 +1,18 @@
+<resources>
+
+    <style name="Theme.MyApplication" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:colorBackground">#000000</item>
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:windowBackground">#000000</item>
+
+        <!-- Buttons in dark mode -->
+        <item name="android:buttonStyle">@style/DarkButton</item>
+    </style>
+
+    <style name="DarkButton" parent="Widget.AppCompat.Button">
+        <item name="android:background">#FFFFFF</item>   <!-- white button -->
+        <item name="android:textColor">#000000</item>   <!-- black text -->
+        <item name="android:padding">12dp</item>
+    </style>
+
+</resources>

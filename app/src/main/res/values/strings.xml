@@ -1,0 +1,21 @@
+<resources>
+    <string-array name="object_types">
+        <item>Select object type</item>
+        <item>Phone</item>
+        <item>Wallet</item>
+        <item>Keys</item>
+        <item>ID Card</item>
+        <item>Other type</item>
+    </string-array>
+    <string name="app_name">L&amp;F</string>
+    <string name="welcome">Veni, Vidi, Found it</string>
+    <string name="next">Login </string>
+    <string name="go_back">Logout</string>
+    <string name="logo">App logo</string>
+    <string name="image">Image coming soon</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="lo_amp_fo"><![CDATA[LO&FO]]></string>
+    <string name="LOFO">LO&amp;FO</string>
+</resources>
+

@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="268dp"
+        android:layout_height="43dp"
+        android:fontFamily="@font/montserrat"
+        android:text="Create Your Account"
+        android:textSize="25dp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.043" />
+
+    <EditText
+        android:id="@+id/registermail"
+        android:layout_width="301dp"
+        android:layout_height="61dp"
+        android:layout_marginTop="124dp"
+        android:background="@drawable/edittextstuff"
+        android:fontFamily="@font/montserrat"
+        android:gravity="top"
+        android:hint="Enter your e-mail"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#808080"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.115" />
+
+    <EditText
+        android:id="@+id/RegisterPword"
+        android:layout_width="301dp"
+        android:layout_height="61dp"
+        android:layout_marginTop="124dp"
+        android:password="true"
+        android:background="@drawable/edittextstuff"
+        android:fontFamily="@font/montserrat"
+        android:gravity="top"
+        android:hint="Enter your password"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#808080"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.333" />
+
+    <EditText
+        android:password="true"
+        android:id="@+id/RegisterConfirmPword"
+        android:layout_width="301dp"
+        android:layout_height="61dp"
+        android:layout_marginTop="124dp"
+        android:background="@drawable/edittextstuff"
+        android:fontFamily="@font/montserrat"
+        android:gravity="top"
+        android:hint="Confirm your password"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#808080"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.565" />
+
+    <Button
+        android:id="@+id/btnRegisterBck"
+        android:layout_width="114dp"
+        android:layout_height="48dp"
+        android:background="@drawable/edittextstuff"
+        android:fontFamily="@font/montserrat"
+        android:text="Return"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.185"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.869" />
+
+    <Button
+        android:id="@+id/btnRegister"
+        android:layout_width="114dp"
+        android:layout_height="48dp"
+        android:background="@drawable/edittextstuff"
+        android:fontFamily="@font/montserrat"
+        android:text="Create"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.814"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.869" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
