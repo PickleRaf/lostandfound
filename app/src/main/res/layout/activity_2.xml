@@ -115,4 +115,41 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.881"
         tools:ignore="MissingConstraints" />
+
+    <!-- Add these TextViews for statistics -->
+    <TextView
+        android:id="@+id/tvStatsReported"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Items Reported: 0"
+        android:fontFamily="@font/montserrat"
+        android:textColor="#FFFFFF"
+        android:textSize="14sp"/>
+
+    <TextView
+        android:id="@+id/tvStatsChats"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Active Chats: 0"
+        android:fontFamily="@font/montserrat"
+        android:textColor="#FFFFFF"
+        android:textSize="14sp"/>
+
+    <TextView
+        android:id="@+id/tvStatsResolved"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Items Resolved: 0"
+        android:fontFamily="@font/montserrat"
+        android:textColor="#FFFFFF"
+        android:textSize="14sp"/>
+
+    <Button
+        android:id="@+id/btnProfile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Profile"
+        android:background="@drawable/edittextstuff"
+        android:fontFamily="@font/montserrat"
+        android:textColor="#FFFFFF"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

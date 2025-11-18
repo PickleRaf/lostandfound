@@ -1,46 +1,116 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.myapplication"
     xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- PHASE 2: Internet permission for Firebase -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <!-- PHASE 2: Storage permissions for image uploads -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+
+    <!-- PHASE 2: Optional - Camera permission if you want to take photos -->
+    <!-- <uses-permission android:name="android.permission.CAMERA" /> -->
+
+    <!-- PHASE 2: Push notifications (optional) -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@mipmap/app_icon"
+        android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/app_icon_round"
+        android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.MyApplication">
-        <activity android:name=".InboxActivity"
-            android:exported="false"/>
-        <activity android:name=".Chat"
-            android:windowSoftInputMode="adjustResize|stateHidden"/>
-        <activity android:name=".DisplayLostItem"
-            android:exported="false"/>
-        <activity android:name=".RegisterActivity"
-            android:exported="false" />
-        <activity android:name=".reportitem"
-            android:exported="false"/>
-        <activity android:name=".Lookforitems"
-            android:exported="false"/>
-        <activity
-            android:name=".SettingsActivity"
-            android:exported="false"/>
-        <activity
-            android:name=".Activity2"
-            android:exported="false" />
+        android:theme="@style/Theme.MyApplication"
+        tools:targetApi="31">
+
+        <!-- Main Activity (Login Screen) -->
         <activity
             android:name=".MainActivity"
             android:exported="true"
             android:theme="@style/Theme.MyApplication">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- Dashboard -->
+        <activity
+            android:name=".Activity2"
+            android:exported="false"
+            android:theme="@style/Theme.MyApplication" />
+
+        <!-- Registration -->
+        <activity
+            android:name=".RegisterActivity"
+            android:exported="false"
+            android:theme="@style/Theme.MyApplication" />
+
+        <!-- Report Item -->
+        <activity
+            android:name=".reportitem"
+            android:exported="false"
+            android:theme="@style/Theme.MyApplication" />
+
+        <!-- Look for Items -->
+        <activity
+            android:name=".Lookforitems"
+            android:exported="false"
+            android:theme="@style/Theme.MyApplication" />
+
+        <!-- Display Lost Item -->
+        <activity
+            android:name=".DisplayLostItem"
+            android:exported="false"
+            android:theme="@style/Theme.MyApplication" />
+
+        <!-- Inbox (Chat List) -->
+        <activity
+            android:name=".InboxActivity"
+            android:exported="false"
+            android:theme="@style/Theme.MyApplication" />
+
+        <!-- Chat -->
+        <activity
+            android:name=".Chat"
+            android:exported="false"
+            android:theme="@style/Theme.MyApplication" />
+
+        <!-- Settings -->
+        <activity
+            android:name=".SettingsActivity"
+            android:exported="false"
+            android:theme="@style/Theme.MyApplication" />
+
+        <!-- PHASE 2: Profile Activity (NEW) -->
+        <activity
+            android:name=".ProfileActivity"
+            android:exported="false"
+            android:theme="@style/Theme.MyApplication" />
+
+        <!-- PHASE 2: Firebase Cloud Messaging Service (Optional) -->
+        <!--
+        <service
+            android:name=".MyFirebaseMessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+        -->
+
+        <!-- PHASE 2: FCM Default Notification Channel (Optional) -->
+        <!--
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="@string/default_notification_channel_id" />
+        -->
+
     </application>
 
 </manifest>

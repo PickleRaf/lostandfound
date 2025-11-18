@@ -69,4 +69,21 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.91" />
+
+    <!-- Add these elements -->
+    <ProgressBar
+        android:id="@+id/progressBarChat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/tvEmptyStateChat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="No messages yet"
+        android:textSize="18sp"
+        android:fontFamily="@font/montserrat"
+        android:textColor="#808080"
+        android:visibility="gone"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

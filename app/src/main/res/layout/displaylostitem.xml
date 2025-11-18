@@ -97,5 +97,43 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.888" />
 
+    <!-- Add these buttons -->
+    <TextView
+        android:id="@+id/tvItemStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Status: ACTIVE"
+        android:textSize="16sp"
+        android:fontFamily="@font/montserrat"
+        android:textColor="#00FF00"
+        android:visibility="gone"/>
+
+    <Button
+        android:id="@+id/btnResolve"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Mark as Resolved"
+        android:background="@drawable/edittextstuff"
+        android:fontFamily="@font/montserrat"
+        android:textColor="#FFFFFF"
+        android:visibility="gone"/>
+
+    <Button
+        android:id="@+id/btnReportUser"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/edittextstuff"
+        android:fontFamily="@font/montserrat"
+        android:text="Report User"
+        android:textColor="#FF0000"
+        tools:layout_editor_absoluteX="143dp"
+        tools:layout_editor_absoluteY="667dp" />
+
+    <ProgressBar
+        android:id="@+id/progressBarDLI"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"/>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -37,4 +37,21 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0" />
 
+    <!-- Add these elements -->
+    <ProgressBar
+        android:id="@+id/progressBarInbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/tvEmptyStateInbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="No messages yet"
+        android:textSize="18sp"
+        android:fontFamily="@font/montserrat"
+        android:textColor="#808080"
+        android:visibility="gone"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

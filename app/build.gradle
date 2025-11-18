@@ -65,5 +65,17 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.google.firebase:firebase-auth:23.1.0'
     implementation 'com.google.android.gms:play-services-auth:20.7.0'
+    // SwipeRefreshLayout (Phase 3)
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
+
+    // Firebase Storage (Phase 2 - for image uploads)
+    implementation 'com.google.firebase:firebase-storage:20.3.0'
+
+    // Firebase Cloud Messaging (Phase 2 - for push notifications)
+    implementation 'com.google.firebase:firebase-messaging:23.4.0'
+
+    // Image loading library (optional but recommended)
+    implementation 'com.github.bumptech.glide:glide:4.16.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.16.0'
 
 }

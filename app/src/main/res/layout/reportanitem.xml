@@ -155,5 +155,35 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.875" />
 
+    <!-- Add character counters -->
+
+    <TextView
+        android:id="@+id/tvDescCharCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/montserrat"
+        android:text="0/200"
+        android:textColor="#FFFFFF"
+        android:textSize="12sp"
+        tools:layout_editor_absoluteX="317dp"
+        tools:layout_editor_absoluteY="428dp" />
+
+    <TextView
+        android:id="@+id/tvLocCharCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/montserrat"
+        android:text="0/100"
+        android:textColor="#FFFFFF"
+        android:textSize="12sp"
+        tools:layout_editor_absoluteX="320dp"
+        tools:layout_editor_absoluteY="547dp" />
+
+    <ProgressBar
+        android:id="@+id/progressBarReport"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
 
