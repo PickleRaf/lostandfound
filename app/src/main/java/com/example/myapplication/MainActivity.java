@@ -102,9 +102,9 @@ public class MainActivity extends AppCompatActivity {
                             Exception e = task.getException();
                             if (e instanceof FirebaseAuthInvalidCredentialsException ||
                                     e instanceof FirebaseAuthInvalidUserException) {
-                                Toast.makeText(this, "Email or password incorrect", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(this, R.string.login_error_incorrect_password, Toast.LENGTH_SHORT).show();
                             } else {
-                                Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                                Toast.makeText(this, getString(R.string.login_error_generic) + e.getMessage(), Toast.LENGTH_LONG).show();
                             }
                         }
                     });
@@ -163,13 +163,13 @@ public class MainActivity extends AppCompatActivity {
                                     startActivity(new Intent(MainActivity.this, Activity2.class));
                                     finish();
                                 } else {
-                                    Toast.makeText(this, "Google sign-in failed", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(this, R.string.google_sign_in_failed, Toast.LENGTH_SHORT).show();
                                 }
                             });
                 }
             } catch (ApiException e) {
                 showLoading(false);
-                Toast.makeText(this, "Google sign-in failed", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.google_sign_in_failed, Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -178,21 +178,21 @@ public class MainActivity extends AppCompatActivity {
     private boolean validateInputs(String email, String password) {
         // Check if fields are empty
         if (email.isEmpty() || password.isEmpty()) {
-            Toast.makeText(this, "Please enter email and password", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.login_error_empty_credentials, Toast.LENGTH_SHORT).show();
             return false;
         }
 
         // Validate email format
         if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            usernameInput.setError("Invalid email format");
-            Toast.makeText(this, "Please enter a valid email address", Toast.LENGTH_SHORT).show();
+            usernameInput.setError(getString(R.string.login_error_invalid_email_format));
+            Toast.makeText(this, R.string.login_error_invalid_email_address, Toast.LENGTH_SHORT).show();
             return false;
         }
 
         // Validate password length
         if (password.length() < 6) {
-            passwordInput.setError("Password must be at least 6 characters");
-            Toast.makeText(this, "Password too short", Toast.LENGTH_SHORT).show();
+            passwordInput.setError(getString(R.string.login_error_password_too_short_error));
+            Toast.makeText(this, R.string.login_error_password_too_short_toast, Toast.LENGTH_SHORT).show();
             return false;
         }
 
@@ -205,21 +205,21 @@ public class MainActivity extends AppCompatActivity {
         if (user == null) return;
 
         new AlertDialog.Builder(this)
-                .setTitle("Email Not Verified")
-                .setMessage("Please verify your email before logging in. Check your inbox for the verification link.")
-                .setPositiveButton("Resend Email", (dialog, which) -> {
+                .setTitle(R.string.email_not_verified_title)
+                .setMessage(R.string.email_not_verified_message)
+                .setPositiveButton(R.string.resend_email_button, (dialog, which) -> {
                     showLoading(true);
                     user.sendEmailVerification()
                             .addOnCompleteListener(task -> {
                                 showLoading(false);
                                 if (task.isSuccessful()) {
-                                    Toast.makeText(this, "Verification email sent!", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(this, R.string.verification_email_sent_toast, Toast.LENGTH_SHORT).show();
                                 } else {
-                                    Toast.makeText(this, "Failed to send email", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(this, R.string.verification_email_failed_toast, Toast.LENGTH_SHORT).show();
                                 }
                             });
                 })
-                .setNegativeButton("Logout", (dialog, which) -> {
+                .setNegativeButton(R.string.go_back, (dialog, which) -> {
                     FirebaseAuth.getInstance().signOut();
                 })
                 .setCancelable(false)

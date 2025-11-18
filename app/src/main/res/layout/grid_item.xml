@@ -19,7 +19,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/montserrat"
-            android:text="Item Name"
+            android:text="@string/grid_item_name_placeholder"
             android:textColor="#FFFFFF"
             android:textSize="18sp"
             android:textStyle="bold" />
@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:fontFamily="@font/montserrat"
-            android:text="Short description"
+            android:text="@string/grid_item_description_placeholder"
             android:textColor="#CCCCCC"
             android:textSize="14sp"
             android:textStyle="bold" />

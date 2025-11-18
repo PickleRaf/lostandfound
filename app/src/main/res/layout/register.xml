@@ -6,11 +6,12 @@
     android:layout_height="match_parent">
 
     <TextView
+        android:id="@+id/textView3"
         android:layout_width="268dp"
         android:layout_height="43dp"
         android:fontFamily="@font/montserrat"
-        android:text="Create Your Account"
-        android:textSize="25dp"
+        android:text="@string/register_title"
+        android:textSize="25sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -27,7 +28,7 @@
         android:background="@drawable/edittextstuff"
         android:fontFamily="@font/montserrat"
         android:gravity="top"
-        android:hint="Enter your e-mail"
+        android:hint="@string/register_email_hint"
         android:textColor="#FFFFFF"
         android:textColorHint="#808080"
         android:textStyle="bold"
@@ -45,8 +46,8 @@
         android:background="@drawable/edittextstuff"
         android:fontFamily="@font/montserrat"
         android:gravity="top"
-        android:hint="Enter your password"
-        android:password="true"
+        android:hint="@string/register_password_hint"
+        android:inputType="textPassword"
         android:textColor="#FFFFFF"
         android:textColorHint="#808080"
         android:textStyle="bold"
@@ -64,8 +65,8 @@
         android:background="@drawable/edittextstuff"
         android:fontFamily="@font/montserrat"
         android:gravity="top"
-        android:hint="Confirm your password"
-        android:password="true"
+        android:hint="@string/register_confirm_password_hint"
+        android:inputType="textPassword"
         android:textColor="#FFFFFF"
         android:textColorHint="#808080"
         android:textStyle="bold"
@@ -83,7 +84,7 @@
         android:layout_height="48dp"
         android:background="@drawable/edittextstuff"
         android:fontFamily="@font/montserrat"
-        android:text="Return"
+        android:text="@string/display_return"
         android:textColor="#FFFFFF"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -99,7 +100,7 @@
         android:layout_height="48dp"
         android:background="@drawable/edittextstuff"
         android:fontFamily="@font/montserrat"
-        android:text="Create"
+        android:text="@string/register_create_button"
         android:textColor="#FFFFFF"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -115,24 +116,34 @@
         android:layout_height="wrap_content"
         android:background="@drawable/edittextstuff"
         android:fontFamily="@font/montserrat"
-        android:text="Upload ID Card *"
+        android:text="@string/register_upload_id_button"
         android:textColor="#FFFFFF"
         android:textStyle="bold"
-        tools:layout_editor_absoluteX="124dp"
-        tools:layout_editor_absoluteY="463dp" />
+        app:layout_constraintBottom_toTopOf="@+id/btnRegister"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/RegisterConfirmPword" />
 
     <ImageView
         android:id="@+id/ivIDPreview"
         android:layout_width="200dp"
         android:layout_height="200dp"
+        android:scaleType="centerCrop"
         android:visibility="gone"
-        android:scaleType="centerCrop"/>
+        app:layout_constraintBottom_toTopOf="@+id/btnSelectID"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/RegisterConfirmPword" />
 
     <ProgressBar
         android:id="@+id/progressBarRegister"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="gone"/>
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

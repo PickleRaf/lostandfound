@@ -3,7 +3,6 @@ package com.example.myapplication;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
@@ -13,6 +12,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class Activity2 extends AppCompatActivity {
@@ -22,10 +22,7 @@ public class Activity2 extends AppCompatActivity {
     private FirebaseFirestore db;
 
     // UI elements
-    private TextView welcomeText;
     private TextView tvStatsReported, tvStatsChats, tvStatsResolved; // PHASE 3: Statistics
-    private Button btnRPI, btnLFI, btnInbox, btnBack, btnProfile; // PHASE 2: Profile button
-    private ImageButton btnSettings;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -38,27 +35,27 @@ public class Activity2 extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
 
         // Link UI elements
-        welcomeText = findViewById(R.id.usernamegetter);
+        TextView welcomeText = findViewById(R.id.usernamegetter);
         tvStatsReported = findViewById(R.id.tvStatsReported);
         tvStatsChats = findViewById(R.id.tvStatsChats);
         tvStatsResolved = findViewById(R.id.tvStatsResolved);
-        btnBack = findViewById(R.id.btnBack);
-        btnRPI = findViewById(R.id.btnReportLost);
-        btnLFI = findViewById(R.id.btnLookForItem);
-        btnSettings = findViewById(R.id.btnSettings);
-        btnInbox = findViewById(R.id.btnInbox);
-        btnProfile = findViewById(R.id.btnProfile);
+        Button btnBack = findViewById(R.id.btnBack);
+        Button btnRPI = findViewById(R.id.btnReportLost);
+        Button btnLFI = findViewById(R.id.btnLookForItem);
+        ImageButton btnSettings = findViewById(R.id.btnSettings);
+        Button btnInbox = findViewById(R.id.btnInbox);
+        Button btnProfile = findViewById(R.id.btnProfile);
 
         // Get username or email for welcome message
         String username = getIntent().getStringExtra("username");
         if (username != null && !username.isEmpty()) {
-            welcomeText.setText("Welcome " + username + "!");
+            welcomeText.setText(getString(R.string.welcome_username, username));
         } else if (mAuth.getCurrentUser() != null && mAuth.getCurrentUser().getEmail() != null) {
             String email = mAuth.getCurrentUser().getEmail();
             String name = email.substring(0, email.indexOf("@"));
-            welcomeText.setText("Welcome " + name + "!");
+            welcomeText.setText(getString(R.string.welcome_username, name));
         } else {
-            welcomeText.setText("Welcome!");
+            welcomeText.setText(R.string.welcome_default);
         }
 
         // PHASE 3: Load statistics dashboard
@@ -117,7 +114,11 @@ public class Activity2 extends AppCompatActivity {
 
     // PHASE 3: Load user statistics
     private void loadStatistics() {
-        String userId = mAuth.getCurrentUser().getUid();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser == null) {
+            return; // Exit if user is not logged in
+        }
+        String userId = currentUser.getUid();
 
         // Count items reported by user
         db.collection("lost_items")
@@ -125,7 +126,7 @@ public class Activity2 extends AppCompatActivity {
                 .get()
                 .addOnSuccessListener(querySnapshot -> {
                     int totalReported = querySnapshot.size();
-                    tvStatsReported.setText("Items Reported: " + totalReported);
+                    tvStatsReported.setText(getString(R.string.stats_items_reported, totalReported));
                 });
 
         // Count resolved items
@@ -135,7 +136,7 @@ public class Activity2 extends AppCompatActivity {
                 .get()
                 .addOnSuccessListener(querySnapshot -> {
                     int totalResolved = querySnapshot.size();
-                    tvStatsResolved.setText("Items Resolved: " + totalResolved);
+                    tvStatsResolved.setText(getString(R.string.stats_items_resolved, totalResolved));
                 });
 
         // Count active chats
@@ -152,7 +153,7 @@ public class Activity2 extends AppCompatActivity {
                             .addOnSuccessListener(snapshot -> {
                                 int reporterChats = snapshot.size();
                                 int totalChats = userChats + reporterChats;
-                                tvStatsChats.setText("Active Chats: " + totalChats);
+                                tvStatsChats.setText(getString(R.string.stats_active_chats, totalChats));
                             });
                 });
     }

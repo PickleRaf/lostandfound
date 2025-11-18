@@ -22,15 +22,15 @@
 
     <ProgressBar
         android:id="@+id/progressBarLFI"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone"/>
+        android:layout_width="7dp"
+        android:layout_height="6dp"
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/tvEmptyStateLFI"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="No items found"
+        android:text="@string/look_for_items_no_items_found"
         android:textSize="18sp"
         android:fontFamily="@font/montserrat"
         android:visibility="gone"/>
@@ -41,7 +41,7 @@
         android:layout_height="56dp"
         android:background="@drawable/edittextstuff"
         android:fontFamily="@font/montserrat"
-        android:hint="Search for an item..."
+        android:hint="@string/look_for_items_search_hint"
         android:padding="12dp"
         android:textColor="#FFFFFF"
         android:textColorHint="#808080"
@@ -60,7 +60,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/edittextstuff"
         android:fontFamily="@font/montserrat"
-        android:text="return"
+        android:text="@string/look_for_items_return_button"
         android:textColor="#FFFFFF"
         android:textColorHint="#808080"
         android:textStyle="bold"

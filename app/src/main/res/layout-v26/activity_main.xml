@@ -20,8 +20,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.005"
-        tools:ignore="MissingConstraints" />
+        app:layout_constraintVertical_bias="0.005" />
 
     <TextView
         android:id="@+id/textView"
@@ -36,8 +35,7 @@
         app:layout_constraintHorizontal_bias="0.493"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView"
-        app:layout_constraintVertical_bias="0.179"
-        tools:ignore="MissingConstraints" />
+        app:layout_constraintVertical_bias="0.179" />
 
     <TextView
         android:id="@+id/textView2"
@@ -51,15 +49,13 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.227"
-        tools:ignore="MissingConstraints" />
+        app:layout_constraintVertical_bias="0.227" />
 
     <EditText
         android:id="@+id/etPassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="100dp"
-        android:autofillHints="username"
+        android:autofillHints="password"
         android:background="@drawable/edittextstuff"
         android:fontFamily="@font/montserrat"
         android:hint="@string/password"
@@ -68,19 +64,18 @@
         android:textColor="#FFFFFF"
         android:textColorHint="#808080"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/btnStart"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.494"
-        tools:ignore="MissingConstraints" />
+        app:layout_constraintTop_toBottomOf="@+id/etUsername"
+        app:layout_constraintVertical_bias="0.19" />
 
     <EditText
         android:id="@+id/etUsername"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:autofillHints="password"
+        android:layout_marginTop="250dp"
+        android:autofillHints="username"
         android:background="@drawable/edittextstuff"
         android:fontFamily="@font/montserrat"
         android:hint="@string/username"
@@ -89,13 +84,9 @@
         android:textColor="#FFFFFF"
         android:textColorHint="#808080"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.457"
-        tools:ignore="MissingConstraints" />
+        app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
     <Button
         android:id="@+id/btnStart"
@@ -109,11 +100,9 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.725"
-        tools:ignore="MissingConstraints" />
+        app:layout_constraintVertical_bias="0.725" />
 
     <Button
         android:id="@+id/btnToRegister"
@@ -121,7 +110,7 @@
         android:layout_height="48dp"
         android:background="@drawable/edittextstuff"
         android:fontFamily="@font/montserrat"
-        android:text="Register"
+        android:text="@string/register"
         android:textColor="#FFFFFF"
         android:textColorHint="#808080"
         android:textStyle="bold"
@@ -130,14 +119,14 @@
         app:layout_constraintHorizontal_bias="0.939"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.899"
-        tools:ignore="MissingConstraints" />
+        app:layout_constraintVertical_bias="0.899" />
 
     <ImageButton
         android:id="@+id/googleBtn"
         android:layout_width="99dp"
         android:layout_height="91dp"
         android:background="@drawable/edittextstuff"
+        android:contentDescription="@string/google_sign_in_button_description"
         android:src="@drawable/googleicon"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
