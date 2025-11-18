@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.activities.main;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -11,11 +11,17 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.myapplication.activities.chat.InboxActivity;
+import com.example.myapplication.activities.items.SearchItemsActivity;
+import com.example.myapplication.activities.profile.ProfileActivity;
+import com.example.myapplication.R;
+import com.example.myapplication.activities.auth.LoginActivity;
+import com.example.myapplication.activities.items.ReportItemActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-public class Activity2 extends AppCompatActivity {
+public class DashboardActivity extends AppCompatActivity {
 
     // Firebase instances
     private FirebaseAuth mAuth;
@@ -28,7 +34,7 @@ public class Activity2 extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_2);
+        setContentView(R.layout.main_activity_dashboard);
 
         // Initialize Firebase
         mAuth = FirebaseAuth.getInstance();
@@ -69,38 +75,38 @@ public class Activity2 extends AppCompatActivity {
         // LOGOUT BUTTON
         btnBack.setOnClickListener(v -> {
             FirebaseAuth.getInstance().signOut();
-            Intent intent = new Intent(Activity2.this, MainActivity.class);
+            Intent intent = new Intent(DashboardActivity.this, LoginActivity.class);
             startActivity(intent);
             finish();
         });
 
         // REPORT ITEM BUTTON
         btnRPI.setOnClickListener(v -> {
-            Intent intent = new Intent(Activity2.this, reportitem.class);
+            Intent intent = new Intent(DashboardActivity.this, ReportItemActivity.class);
             startActivity(intent);
         });
 
         // LOOK FOR ITEMS BUTTON
         btnLFI.setOnClickListener(v -> {
-            Intent intent = new Intent(Activity2.this, Lookforitems.class);
+            Intent intent = new Intent(DashboardActivity.this, SearchItemsActivity.class);
             startActivity(intent);
         });
 
         // SETTINGS BUTTON
         btnSettings.setOnClickListener(v -> {
-            Intent intent = new Intent(Activity2.this, SettingsActivity.class);
+            Intent intent = new Intent(DashboardActivity.this, SettingsActivity.class);
             startActivity(intent);
         });
 
         // INBOX BUTTON
         btnInbox.setOnClickListener(v -> {
-            Intent intent = new Intent(Activity2.this, InboxActivity.class);
+            Intent intent = new Intent(DashboardActivity.this, InboxActivity.class);
             startActivity(intent);
         });
 
         // PHASE 2: PROFILE BUTTON
         btnProfile.setOnClickListener(v -> {
-            Intent intent = new Intent(Activity2.this, ProfileActivity.class);
+            Intent intent = new Intent(DashboardActivity.this, ProfileActivity.class);
             startActivity(intent);
         });
     }

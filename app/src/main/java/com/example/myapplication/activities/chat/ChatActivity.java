@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.activities.chat;
 
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -15,6 +15,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.myapplication.models.Message;
+import com.example.myapplication.adapters.MessageAdapter;
+import com.example.myapplication.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -26,7 +29,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Chat extends AppCompatActivity {
+public class ChatActivity extends AppCompatActivity {
 
     // UI components
     private RecyclerView recyclerMessages;
@@ -47,7 +50,7 @@ public class Chat extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.chat);
+        setContentView(R.layout.chat_activity_chat);
 
         // Link UI elements
         tvItemName = findViewById(R.id.tvItemName);
@@ -106,7 +109,7 @@ public class Chat extends AppCompatActivity {
                 }
             }
         }).addOnFailureListener(e ->
-                Toast.makeText(Chat.this, "Error loading title: " + e.getMessage(),
+                Toast.makeText(ChatActivity.this, "Error loading title: " + e.getMessage(),
                         Toast.LENGTH_SHORT).show()
         );
     }
@@ -124,7 +127,7 @@ public class Chat extends AppCompatActivity {
         messagesRef.orderBy("timestamp").addSnapshotListener((queryDocumentSnapshots, e) -> {
             if (e != null) {
                 showLoading(false);
-                Toast.makeText(Chat.this, "Error loading messages: " + e.getMessage(),
+                Toast.makeText(ChatActivity.this, "Error loading messages: " + e.getMessage(),
                         Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -188,7 +191,7 @@ public class Chat extends AppCompatActivity {
                     etMessage.startAnimation(slideOut);
                 })
                 .addOnFailureListener(e ->
-                        Toast.makeText(Chat.this, "Error sending: " + e.getMessage(),
+                        Toast.makeText(ChatActivity.this, "Error sending: " + e.getMessage(),
                                 Toast.LENGTH_SHORT).show()
                 );
     }

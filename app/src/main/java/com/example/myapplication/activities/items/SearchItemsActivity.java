@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.activities.items;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -16,13 +16,16 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.example.myapplication.models.Item;
+import com.example.myapplication.adapters.ItemAdapter;
+import com.example.myapplication.R;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Lookforitems extends AppCompatActivity {
+public class SearchItemsActivity extends AppCompatActivity {
 
     // Data and adapter
     private ItemAdapter itemAdapter;
@@ -42,7 +45,7 @@ public class Lookforitems extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.lookforitems);
+        setContentView(R.layout.items_activity_search_item);
 
         // Initialize Firebase
         db = FirebaseFirestore.getInstance();
@@ -72,7 +75,7 @@ public class Lookforitems extends AppCompatActivity {
         gridView.setOnItemClickListener((parent, view, position, id) -> {
             Item clickedItem = (Item) itemAdapter.getItem(position);
 
-            Intent intent = new Intent(Lookforitems.this, DisplayLostItem.class);
+            Intent intent = new Intent(SearchItemsActivity.this, ItemDetailActivity.class);
             intent.putExtra("title", clickedItem.getName());
             intent.putExtra("description", clickedItem.getDescription());
             intent.putExtra("location", clickedItem.getLocation());

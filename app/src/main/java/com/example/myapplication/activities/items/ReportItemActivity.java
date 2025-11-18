@@ -1,7 +1,5 @@
-package com.example.myapplication;
+package com.example.myapplication.activities.items;
 
-import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
@@ -18,6 +16,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.myapplication.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -25,7 +24,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.HashMap;
 import java.util.Map;
 
-public class reportitem extends AppCompatActivity {
+public class ReportItemActivity extends AppCompatActivity {
 
     // Firebase instances
     private FirebaseFirestore db;
@@ -49,7 +48,7 @@ public class reportitem extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.reportanitem);
+        setContentView(R.layout.items_activity_report_item);
 
         // Initialize Firebase instances
         db = FirebaseFirestore.getInstance();
@@ -128,7 +127,7 @@ public class reportitem extends AppCompatActivity {
     private void setupSpinner() {
         ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(
                 this,
-                R.layout.spinnercollapsed,
+                R.layout.component_spinner_collapsed,
                 getResources().getStringArray(R.array.object_types)
         ) {
             @Override
@@ -154,7 +153,7 @@ public class reportitem extends AppCompatActivity {
         };
 
         // Set layout for opened dropdown
-        adapter.setDropDownViewResource(R.layout.spinneropen);
+        adapter.setDropDownViewResource(R.layout.component_spinner_open);
         spinner.setAdapter(adapter);
     }
 

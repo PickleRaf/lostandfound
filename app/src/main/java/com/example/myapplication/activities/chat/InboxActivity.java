@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.activities.chat;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,6 +13,9 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.myapplication.models.ChatItem;
+import com.example.myapplication.adapters.InboxAdapter;
+import com.example.myapplication.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -38,7 +41,7 @@ public class InboxActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_inbox);
+        setContentView(R.layout.chat_activity_inbox);
 
         // Initialize Firebase
         db = FirebaseFirestore.getInstance();
@@ -55,7 +58,7 @@ public class InboxActivity extends AppCompatActivity {
         chatList = new ArrayList<>();
         adapter = new InboxAdapter(chatList, chatItem -> {
             // When a chat is clicked, open Chat activity
-            Intent intent = new Intent(InboxActivity.this, Chat.class);
+            Intent intent = new Intent(InboxActivity.this, ChatActivity.class);
             intent.putExtra("chatId", chatItem.getChatId());
             startActivity(intent);
         });

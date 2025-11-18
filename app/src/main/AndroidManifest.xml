@@ -30,7 +30,7 @@
 
         <!-- Main Activity (Login Screen) -->
         <activity
-            android:name=".MainActivity"
+            android:name=".activities.auth.LoginActivity"
             android:exported="true"
             android:theme="@style/Theme.MyApplication">
             <intent-filter>
@@ -41,55 +41,55 @@
 
         <!-- Dashboard -->
         <activity
-            android:name=".Activity2"
+            android:name=".activities.main.DashboardActivity"
             android:exported="false"
             android:theme="@style/Theme.MyApplication" />
 
         <!-- Registration -->
         <activity
-            android:name=".RegisterActivity"
+            android:name=".activities.auth.RegisterActivity"
             android:exported="false"
             android:theme="@style/Theme.MyApplication" />
 
         <!-- Report Item -->
         <activity
-            android:name=".reportitem"
+            android:name=".activities.items.ReportItemActivity"
             android:exported="false"
             android:theme="@style/Theme.MyApplication" />
 
         <!-- Look for Items -->
         <activity
-            android:name=".Lookforitems"
+            android:name=".activities.items.SearchItemsActivity"
             android:exported="false"
             android:theme="@style/Theme.MyApplication" />
 
         <!-- Display Lost Item -->
         <activity
-            android:name=".DisplayLostItem"
+            android:name=".activities.items.ItemDetailActivity"
             android:exported="false"
             android:theme="@style/Theme.MyApplication" />
 
         <!-- Inbox (Chat List) -->
         <activity
-            android:name=".InboxActivity"
+            android:name=".activities.chat.InboxActivity"
             android:exported="false"
             android:theme="@style/Theme.MyApplication" />
 
         <!-- Chat -->
         <activity
-            android:name=".Chat"
+            android:name=".activities.chat.ChatActivity"
             android:exported="false"
             android:theme="@style/Theme.MyApplication" />
 
         <!-- Settings -->
         <activity
-            android:name=".SettingsActivity"
+            android:name=".activities.main.SettingsActivity"
             android:exported="false"
             android:theme="@style/Theme.MyApplication" />
 
         <!-- PHASE 2: Profile Activity (NEW) -->
         <activity
-            android:name=".ProfileActivity"
+            android:name=".activities.profile.ProfileActivity"
             android:exported="false"
             android:theme="@style/Theme.MyApplication" />
 

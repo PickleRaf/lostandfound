@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,6 +8,9 @@ import android.widget.BaseAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.TextView;
+
+import com.example.myapplication.models.Item;
+import com.example.myapplication.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +51,7 @@ public class ItemAdapter extends BaseAdapter implements Filterable {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
-            convertView = LayoutInflater.from(context).inflate(R.layout.grid_item, parent, false);
+            convertView = LayoutInflater.from(context).inflate(R.layout.items_grid_card, parent, false);
         }
 
         TextView tvName = convertView.findViewById(R.id.tvItemName);

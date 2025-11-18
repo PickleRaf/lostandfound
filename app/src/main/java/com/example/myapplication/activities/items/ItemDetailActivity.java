@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.activities.items;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,6 +11,8 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.myapplication.activities.chat.ChatActivity;
+import com.example.myapplication.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -18,7 +20,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.HashMap;
 import java.util.Map;
 
-public class DisplayLostItem extends AppCompatActivity {
+public class ItemDetailActivity extends AppCompatActivity {
 
     // UI elements
     private TextView tvDesc, tvLoc, tvStatus;
@@ -35,7 +37,7 @@ public class DisplayLostItem extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.displaylostitem);
+        setContentView(R.layout.items_activity_item_detail);
 
         // Link UI elements
         tvDesc = findViewById(R.id.showDesc);
@@ -94,7 +96,7 @@ public class DisplayLostItem extends AppCompatActivity {
                         if(docSnapshot.exists()) {
                             // Chat already exists - open it
                             Toast.makeText(this, "Opening existing chat...", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(DisplayLostItem.this, Chat.class);
+                            Intent intent = new Intent(ItemDetailActivity.this, ChatActivity.class);
                             intent.putExtra("chatId", chatId);
                             startActivity(intent);
                         } else {
@@ -111,7 +113,7 @@ public class DisplayLostItem extends AppCompatActivity {
                                     .set(chatData)
                                     .addOnSuccessListener(aVoid -> {
                                         // Navigate to chat screen
-                                        Intent intent = new Intent(DisplayLostItem.this, Chat.class);
+                                        Intent intent = new Intent(ItemDetailActivity.this, ChatActivity.class);
                                         intent.putExtra("Title", title);
                                         intent.putExtra("chatId", chatId);
                                         intent.putExtra("itemId", itemId);

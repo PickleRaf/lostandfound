@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.activities.auth;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,6 +14,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.myapplication.activities.main.DashboardActivity;
+import com.example.myapplication.R;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -27,7 +29,7 @@ import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
-public class MainActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity {
 
     // Firebase authentication instance
     private FirebaseAuth mAuth;
@@ -47,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.auth_activity_login);
 
         // Initialize Firebase Auth instance
         mAuth = FirebaseAuth.getInstance();
@@ -91,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
                             FirebaseUser user = mAuth.getCurrentUser();
                             if (user != null && user.isEmailVerified()) {
                                 // Email verified - proceed to dashboard
-                                startActivity(new Intent(MainActivity.this, Activity2.class));
+                                startActivity(new Intent(LoginActivity.this, DashboardActivity.class));
                                 finish();
                             } else {
                                 // Email not verified - show dialog
@@ -120,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
         // REGISTER BUTTON - Navigate to registration screen
         Button btnToRegister = findViewById(R.id.btnToRegister);
         btnToRegister.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, RegisterActivity.class);
+            Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
             startActivity(intent);
         });
     }
@@ -135,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
             // PHASE 1: Check if email is verified
             if (currentUser.isEmailVerified()) {
                 // User is logged in and verified - skip login screen
-                startActivity(new Intent(MainActivity.this, Activity2.class));
+                startActivity(new Intent(LoginActivity.this, DashboardActivity.class));
                 finish();
             } else {
                 // Show verification dialog
@@ -160,7 +162,7 @@ public class MainActivity extends AppCompatActivity {
                             .addOnCompleteListener(this, task1 -> {
                                 showLoading(false);
                                 if (task1.isSuccessful()) {
-                                    startActivity(new Intent(MainActivity.this, Activity2.class));
+                                    startActivity(new Intent(LoginActivity.this, DashboardActivity.class));
                                     finish();
                                 } else {
                                     Toast.makeText(this, R.string.google_sign_in_failed, Toast.LENGTH_SHORT).show();
