@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="#000000">
 
+    <!-- TITLE -->
     <TextView
-        android:layout_width="413dp"
-        android:layout_height="75dp"
+        android:id="@+id/tvInboxTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:background="@android:color/black"
         android:elevation="4dp"
         android:fontFamily="@font/montserrat"
@@ -19,31 +20,33 @@
         android:textColor="#808080"
         android:textSize="40sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.024" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
+    <!-- CHAT LIST -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewChats"
-        android:layout_width="414dp"
-        android:layout_height="643dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:padding="8dp"
+        app:layout_constraintTop_toBottomOf="@id/tvInboxTitle"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.666"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Add these elements -->
+    <!-- LOADING SPINNER (CENTERED) -->
     <ProgressBar
         android:id="@+id/progressBarInbox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="gone"/>
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
+    <!-- EMPTY STATE (CENTERED) -->
     <TextView
         android:id="@+id/tvEmptyStateInbox"
         android:layout_width="wrap_content"
@@ -52,6 +55,10 @@
         android:textSize="18sp"
         android:fontFamily="@font/montserrat"
         android:textColor="#808080"
-        android:visibility="gone"/>
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

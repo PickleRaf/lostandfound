@@ -86,4 +86,6 @@
     <string name="grid_item_name_placeholder">Item Name</string>
     <string name="grid_item_description_placeholder">Short description</string>
     <string name="settings_title">Settings page</string>
+    <string name="chat_list_item_title_placeholder">Item Title</string>
+    <string name="chat_list_timestamp_placeholder">01/01/2024 12:00</string>
 </resources>

@@ -24,6 +24,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.048" />
 
+
     <ImageButton
         android:id="@+id/btnSettings"
         android:layout_width="93dp"
@@ -37,14 +38,13 @@
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.023"
+        app:layout_constraintVertical_bias="0.0"
         tools:ignore="ContentDescription,HardcodedText" />
-
 
     <Button
         android:id="@+id/btnReportLost"
-        android:layout_width="313dp"
-        android:layout_height="179dp"
+        android:layout_width="289dp"
+        android:layout_height="98dp"
         android:background="@drawable/edittextstuff"
         android:fontFamily="@font/montserrat"
         android:padding="20dp"
@@ -55,15 +55,15 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.486"
+        app:layout_constraintHorizontal_bias="0.492"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.262" />
+        app:layout_constraintVertical_bias="0.259" />
 
     <Button
         android:id="@+id/btnLookForItem"
-        android:layout_width="313dp"
-        android:layout_height="179dp"
+        android:layout_width="297dp"
+        android:layout_height="65dp"
         android:layout_marginTop="124dp"
         android:background="@drawable/edittextstuff"
         android:fontFamily="@font/montserrat"
@@ -75,10 +75,12 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.47"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.535" />
+        app:layout_constraintVertical_bias="0.313" />
+
+    <!-- Add these TextViews for statistics -->
+    <!-- STATISTICS SECTION -->
 
     <Button
         android:id="@+id/btnBack"
@@ -92,12 +94,13 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.148"
+        app:layout_constraintHorizontal_bias="0.541"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.881"
+        app:layout_constraintVertical_bias="0.934"
         tools:ignore="MissingConstraints" />
 
+    <!-- PROFILE BUTTON -->
     <Button
         android:id="@+id/btnInbox"
         android:layout_width="wrap_content"
@@ -110,46 +113,60 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.845"
+        app:layout_constraintHorizontal_bias="0.792"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.881"
+        app:layout_constraintVertical_bias="0.789"
         tools:ignore="MissingConstraints" />
 
-    <!-- Add these TextViews for statistics -->
     <TextView
         android:id="@+id/tvStatsReported"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/items_reported_placeholder"
+        android:layout_marginStart="72dp"
+        android:layout_marginTop="28dp"
         android:fontFamily="@font/montserrat"
+        android:text="@string/items_reported_placeholder"
         android:textColor="#FFFFFF"
-        android:textSize="14sp"/>
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnLookForItem" />
 
     <TextView
         android:id="@+id/tvStatsChats"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/active_chats_placeholder"
+        android:layout_marginTop="20dp"
         android:fontFamily="@font/montserrat"
+        android:text="@string/active_chats_placeholder"
         android:textColor="#FFFFFF"
-        android:textSize="14sp"/>
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="@id/tvStatsReported"
+        app:layout_constraintTop_toBottomOf="@id/tvStatsReported" />
 
     <TextView
         android:id="@+id/tvStatsResolved"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/items_resolved_placeholder"
+        android:layout_marginTop="20dp"
         android:fontFamily="@font/montserrat"
+        android:text="@string/items_resolved_placeholder"
         android:textColor="#FFFFFF"
-        android:textSize="14sp"/>
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="@id/tvStatsChats"
+        app:layout_constraintTop_toBottomOf="@id/tvStatsChats" />
 
     <Button
         android:id="@+id/btnProfile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/profile_button"
+        android:layout_marginTop="44dp"
         android:background="@drawable/edittextstuff"
         android:fontFamily="@font/montserrat"
-        android:textColor="#FFFFFF"/>
+        android:text="@string/profile_button"
+        android:textColor="#FFFFFF"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.222"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvStatsResolved" />
 </androidx.constraintlayout.widget.ConstraintLayout>
