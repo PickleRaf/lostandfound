@@ -2,19 +2,26 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- PHASE 2: Internet permission for Firebase -->
+    <!-- Firebase / Internet -->
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
-    <!-- PHASE 2: Storage permissions for image uploads -->
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+    <!-- Storage permission (only needed for selecting a photo from gallery) -->
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
 
-    <!-- PHASE 2: Optional - Camera permission if you want to take photos -->
-    <!-- <uses-permission android:name="android.permission.CAMERA" /> -->
+    <!-- Camera permission (REQUIRED for taking a photo) -->
+    <uses-permission
+        android:name="android.permission.CAMERA"
+        android:required="false"/>
 
-    <!-- PHASE 2: Push notifications (optional) -->
+    <!-- Notifications (optional) -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <application
@@ -28,7 +35,7 @@
         android:theme="@style/Theme.MyApplication"
         tools:targetApi="31">
 
-        <!-- Main Activity (Login Screen) -->
+        <!-- Login Activity -->
         <activity
             android:name=".activities.auth.LoginActivity"
             android:exported="true"
@@ -63,13 +70,13 @@
             android:exported="false"
             android:theme="@style/Theme.MyApplication" />
 
-        <!-- Display Lost Item -->
+        <!-- Display Item -->
         <activity
             android:name=".activities.items.ItemDetailActivity"
             android:exported="false"
             android:theme="@style/Theme.MyApplication" />
 
-        <!-- Inbox (Chat List) -->
+        <!-- Inbox -->
         <activity
             android:name=".activities.chat.InboxActivity"
             android:exported="false"
@@ -87,29 +94,22 @@
             android:exported="false"
             android:theme="@style/Theme.MyApplication" />
 
-        <!-- PHASE 2: Profile Activity (NEW) -->
+        <!-- Profile -->
         <activity
             android:name=".activities.profile.ProfileActivity"
             android:exported="false"
             android:theme="@style/Theme.MyApplication" />
 
-        <!-- PHASE 2: Firebase Cloud Messaging Service (Optional) -->
-        <!--
-        <service
-            android:name=".MyFirebaseMessagingService"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT" />
-            </intent-filter>
-        </service>
-        -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.example.myapplication.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
 
-        <!-- PHASE 2: FCM Default Notification Channel (Optional) -->
-        <!--
-        <meta-data
-            android:name="com.google.firebase.messaging.default_notification_channel_id"
-            android:value="@string/default_notification_channel_id" />
-        -->
 
     </application>
 
