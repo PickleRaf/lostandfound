@@ -223,11 +223,11 @@ public class RegisterActivity extends AppCompatActivity {
                     if (finalValid) {
                         if (!finalFaceFound) {
                             new AlertDialog.Builder(RegisterActivity.this)
-                                    .setTitle("No photo detected")
-                                    .setMessage("We couldn't detect a face/photo on this ID. Try again or proceed anyway?")
+                                    .setTitle("No Photo Detected")
+                                    .setMessage("We couldn't detect a face/photo on this ID card. A visible photo is required for verification.\n\nPlease ensure:\n• The ID card photo is clearly visible\n• The image is well-lit\n• The entire card is in frame")
                                     .setPositiveButton("Try Again", (d, w) -> resetIDSelection())
-                                    .setNegativeButton("Proceed Anyway", (d, w) -> markIDVerified(idData))
                                     .setNeutralButton("See Extracted Data", (d, w) -> showExtractedDataDialog(idData, finalExtracted))
+                                    .setCancelable(false)
                                     .show();
                         } else {
                             markIDVerified(idData);
