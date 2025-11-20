@@ -41,10 +41,15 @@
         app:layout_constraintVertical_bias="0.0"
         tools:ignore="ContentDescription,HardcodedText" />
 
+    <!-- Add these TextViews for statistics -->
+    <!-- STATISTICS SECTION -->
+
+    <!-- PROFILE BUTTON -->
+
     <Button
         android:id="@+id/btnReportLost"
-        android:layout_width="289dp"
-        android:layout_height="98dp"
+        android:layout_width="272dp"
+        android:layout_height="68dp"
         android:background="@drawable/edittextstuff"
         android:fontFamily="@font/montserrat"
         android:padding="20dp"
@@ -55,15 +60,15 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.492"
+        app:layout_constraintHorizontal_bias="0.45"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.259" />
+        app:layout_constraintVertical_bias="0.458" />
 
     <Button
         android:id="@+id/btnLookForItem"
-        android:layout_width="297dp"
-        android:layout_height="65dp"
+        android:layout_width="269dp"
+        android:layout_height="67dp"
         android:layout_marginTop="124dp"
         android:background="@drawable/edittextstuff"
         android:fontFamily="@font/montserrat"
@@ -75,12 +80,10 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.443"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.313" />
-
-    <!-- Add these TextViews for statistics -->
-    <!-- STATISTICS SECTION -->
+        app:layout_constraintVertical_bias="0.509" />
 
     <Button
         android:id="@+id/btnBack"
@@ -94,13 +97,12 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.541"
+        app:layout_constraintHorizontal_bias="0.95"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.934"
+        app:layout_constraintVertical_bias="0.928"
         tools:ignore="MissingConstraints" />
 
-    <!-- PROFILE BUTTON -->
     <Button
         android:id="@+id/btnInbox"
         android:layout_width="wrap_content"
@@ -113,60 +115,69 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.792"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.789"
+        app:layout_constraintVertical_bias="0.733"
         tools:ignore="MissingConstraints" />
-
-    <TextView
-        android:id="@+id/tvStatsReported"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="72dp"
-        android:layout_marginTop="28dp"
-        android:fontFamily="@font/montserrat"
-        android:text="@string/items_reported_placeholder"
-        android:textColor="#FFFFFF"
-        android:textSize="14sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btnLookForItem" />
-
-    <TextView
-        android:id="@+id/tvStatsChats"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:fontFamily="@font/montserrat"
-        android:text="@string/active_chats_placeholder"
-        android:textColor="#FFFFFF"
-        android:textSize="14sp"
-        app:layout_constraintStart_toStartOf="@id/tvStatsReported"
-        app:layout_constraintTop_toBottomOf="@id/tvStatsReported" />
 
     <TextView
         android:id="@+id/tvStatsResolved"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
         android:fontFamily="@font/montserrat"
         android:text="@string/items_resolved_placeholder"
         android:textColor="#FFFFFF"
         android:textSize="14sp"
-        app:layout_constraintStart_toStartOf="@id/tvStatsChats"
-        app:layout_constraintTop_toBottomOf="@id/tvStatsChats" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.092"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.311" />
+
+    <TextView
+        android:id="@+id/tvStatsReported"
+        android:layout_width="153dp"
+        android:layout_height="21dp"
+        android:fontFamily="@font/montserrat"
+        android:text="@string/items_reported_placeholder"
+        android:textColor="#FFFFFF"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.104"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.192" />
+
+    <TextView
+        android:id="@+id/tvStatsChats"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/montserrat"
+        android:text="@string/active_chats_placeholder"
+        android:textColor="#FFFFFF"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.086"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.25" />
 
     <Button
         android:id="@+id/btnProfile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="44dp"
         android:background="@drawable/edittextstuff"
         android:fontFamily="@font/montserrat"
         android:text="@string/profile_button"
         android:textColor="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.222"
+        app:layout_constraintHorizontal_bias="0.049"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvStatsResolved" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.023" />
 </androidx.constraintlayout.widget.ConstraintLayout>

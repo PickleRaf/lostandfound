@@ -25,8 +25,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 import com.google.mlkit.vision.common.InputImage;
 import com.google.mlkit.vision.face.Face;
 import com.google.mlkit.vision.face.FaceDetection;
@@ -38,7 +36,6 @@ import com.google.mlkit.vision.text.TextRecognizer;
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -47,6 +44,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class RegisterActivity extends AppCompatActivity {
@@ -60,22 +58,21 @@ public class RegisterActivity extends AppCompatActivity {
     // Firebase
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
-    private FirebaseStorage storage;
 
-    // ID card data
-    private Uri idCardUri; // final compressed file URI to upload
-    private String currentPhotoPath; // temp camera file path
+    // ID card extracted data
+    private String currentPhotoPath;
     private boolean isIDVerified = false;
+    private Map<String, String> extractedIDData;
 
     // ML Kit
     private TextRecognizer textRecognizer;
-    private FaceDetector faceDetector; // optional, used to check presence of face/photo
+    private FaceDetector faceDetector;
 
     // Activity result launchers
     private ActivityResultLauncher<Uri> cameraLauncher;
     private ActivityResultLauncher<String> galleryLauncher;
 
-    // Background executor for compression / heavy tasks
+    // Background executor
     private final Executor bgExecutor = Executors.newSingleThreadExecutor();
 
     @Override
@@ -86,12 +83,10 @@ public class RegisterActivity extends AppCompatActivity {
         // Firebase init
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
-        storage = FirebaseStorage.getInstance();
 
         // ML Kit init
         textRecognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS);
 
-        // Face detector (fast, accurate enough for presence check)
         FaceDetectorOptions highAccuracyOpts =
                 new FaceDetectorOptions.Builder()
                         .setPerformanceMode(FaceDetectorOptions.PERFORMANCE_MODE_FAST)
@@ -119,7 +114,7 @@ public class RegisterActivity extends AppCompatActivity {
                         if (bitmap != null) {
                             ivIDPreview.setImageBitmap(bitmap);
                             ivIDPreview.setVisibility(View.VISIBLE);
-                            verifyIDCardAsync(bitmap);
+                            verifyAndExtractIDDataAsync(bitmap);
                         } else {
                             Toast.makeText(this, "Captured image not readable", Toast.LENGTH_SHORT).show();
                         }
@@ -139,8 +134,7 @@ public class RegisterActivity extends AppCompatActivity {
                             if (bitmap != null) {
                                 ivIDPreview.setImageBitmap(bitmap);
                                 ivIDPreview.setVisibility(View.VISIBLE);
-                                // compress gallery image before marking as idCardUri
-                                compressAndSaveThenMarkVerified(bitmap);
+                                verifyAndExtractIDDataAsync(bitmap);
                             } else {
                                 Toast.makeText(this, "Unable to load selected image", Toast.LENGTH_SHORT).show();
                             }
@@ -153,9 +147,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         // Button listeners
         btnRegisterBck.setOnClickListener(v -> finish());
-
         btnSelectID.setOnClickListener(v -> showImageSourceDialog());
-
         btnRegister.setOnClickListener(v -> createAccount());
     }
 
@@ -200,16 +192,21 @@ public class RegisterActivity extends AppCompatActivity {
         return File.createTempFile(imageFileName, ".jpg", storageDir);
     }
 
-    private void verifyIDCardAsync(Bitmap bitmap) {
+    private void verifyAndExtractIDDataAsync(Bitmap bitmap) {
         setUiBusy(true);
         bgExecutor.execute(() -> {
             try {
                 InputImage image = InputImage.fromBitmap(bitmap, 0);
                 Task<Text> ocrTask = textRecognizer.process(image);
                 Text textResult = com.google.android.gms.tasks.Tasks.await(ocrTask);
-                String extracted = textResult.getText().toLowerCase(Locale.ROOT);
+                String extractedText = textResult.getText();
 
-                boolean ocrValid = validateIDCard(extracted);
+                // Extract ID card fields
+                Map<String, String> idData = extractIDCardFields(extractedText);
+
+                boolean isValid = validateExtractedData(idData);
+
+                // Check for face
                 boolean faceFound = false;
                 try {
                     Task<java.util.List<Face>> faceTask = faceDetector.process(image);
@@ -217,31 +214,26 @@ public class RegisterActivity extends AppCompatActivity {
                     faceFound = (faces != null && !faces.isEmpty());
                 } catch (Exception ignored) {}
 
-                final boolean finalOcrValid = ocrValid;
+                final boolean finalValid = isValid;
                 final boolean finalFaceFound = faceFound;
-                final String finalExtracted = extracted;
+                final String finalExtracted = extractedText;
 
                 runOnUiThread(() -> {
                     setUiBusy(false);
-                    if (finalOcrValid) {
+                    if (finalValid) {
                         if (!finalFaceFound) {
                             new AlertDialog.Builder(RegisterActivity.this)
                                     .setTitle("No photo detected")
                                     .setMessage("We couldn't detect a face/photo on this ID. Try again or proceed anyway?")
-                                    .setPositiveButton("Try Again", (d, w) -> {
-                                        ivIDPreview.setImageDrawable(null);
-                                        ivIDPreview.setVisibility(View.GONE);
-                                        idCardUri = null;
-                                        showImageSourceDialog();
-                                    })
-                                    .setNegativeButton("Proceed Anyway", (d, w) -> compressAndSaveThenMarkVerified(bitmap))
-                                    .setNeutralButton("See Detected Text", (d, w) -> showDetectedTextDialog(finalExtracted))
+                                    .setPositiveButton("Try Again", (d, w) -> resetIDSelection())
+                                    .setNegativeButton("Proceed Anyway", (d, w) -> markIDVerified(idData))
+                                    .setNeutralButton("See Extracted Data", (d, w) -> showExtractedDataDialog(idData, finalExtracted))
                                     .show();
                         } else {
-                            compressAndSaveThenMarkVerified(bitmap);
+                            markIDVerified(idData);
                         }
                     } else {
-                        showVerificationFailedDialog(finalExtracted);
+                        showVerificationFailedDialog(idData, finalExtracted);
                     }
                 });
 
@@ -254,94 +246,158 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
-    private void compressAndSaveThenMarkVerified(Bitmap bitmap) {
-        setUiBusy(true);
-        bgExecutor.execute(() -> {
-            try {
-                Uri compressed = saveCompressedImage(bitmap);
-                runOnUiThread(() -> {
-                    setUiBusy(false);
-                    if (compressed != null) {
-                        idCardUri = compressed;
-                        isIDVerified = true;
-                        btnSelectID.setText("✓ ID Verified");
-                        btnSelectID.setEnabled(false);
-                        Toast.makeText(RegisterActivity.this, "ID verified and saved", Toast.LENGTH_LONG).show();
-                    } else {
-                        Toast.makeText(RegisterActivity.this, "Failed to process image", Toast.LENGTH_SHORT).show();
-                    }
-                });
-            } catch (Exception e) {
-                runOnUiThread(() -> {
-                    setUiBusy(false);
-                    Toast.makeText(RegisterActivity.this, "Error saving image: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                });
-            }
-        });
-    }
+    private Map<String, String> extractIDCardFields(String text) {
+        Map<String, String> data = new HashMap<>();
 
-    private Uri saveCompressedImage(Bitmap bitmap) {
-        try {
-            final int MAX_DIM = 1200;
-            int w = bitmap.getWidth();
-            int h = bitmap.getHeight();
-            int max = Math.max(w, h);
-            Bitmap scaled = bitmap;
-            if (max > MAX_DIM) {
-                float scale = (float) MAX_DIM / max;
-                scaled = Bitmap.createScaledBitmap(bitmap, Math.round(w * scale), Math.round(h * scale), true);
-            }
-            File outFile = new File(getCacheDir(), "verified_id_" + System.currentTimeMillis() + ".jpg");
-            FileOutputStream fos = new FileOutputStream(outFile);
-            scaled.compress(Bitmap.CompressFormat.JPEG, 75, fos);
-            fos.flush();
-            fos.close();
-            return Uri.fromFile(outFile);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
+        // Initialize all fields
+        data.put("firstName", "");
+        data.put("lastName", "");
+        data.put("dateOfBirth", "");
+        data.put("major", "");
+        data.put("studentId", "");
+
+        if (text == null || text.isEmpty()) {
+            return data;
         }
+
+        // Process line by line for better accuracy
+        String[] lines = text.split("\n");
+
+        for (int i = 0; i < lines.length; i++) {
+            String line = lines[i].trim();
+            String nextLine = (i + 1 < lines.length) ? lines[i + 1].trim() : "";
+
+            // Check if current line is a label
+            if (line.toLowerCase().contains("last name")) {
+                // Value might be on same line after colon or on next line
+                Pattern sameLinePattern = Pattern.compile("last\\s+name\\s*:?\\s*(.+)", Pattern.CASE_INSENSITIVE);
+                Matcher matcher = sameLinePattern.matcher(line);
+                if (matcher.find() && !matcher.group(1).trim().isEmpty()) {
+                    data.put("lastName", matcher.group(1).trim());
+                } else if (!nextLine.isEmpty() && !nextLine.contains(":")) {
+                    data.put("lastName", nextLine);
+                }
+            }
+            else if (line.toLowerCase().contains("first name")) {
+                Pattern sameLinePattern = Pattern.compile("first\\s+name\\s*:?\\s*(.+)", Pattern.CASE_INSENSITIVE);
+                Matcher matcher = sameLinePattern.matcher(line);
+                if (matcher.find() && !matcher.group(1).trim().isEmpty()) {
+                    data.put("firstName", matcher.group(1).trim());
+                } else if (!nextLine.isEmpty() && !nextLine.contains(":")) {
+                    data.put("firstName", nextLine);
+                }
+            }
+            else if (line.toLowerCase().contains("date of birth")) {
+                Pattern sameLinePattern = Pattern.compile("date\\s+of\\s+birth\\s*:?\\s*(.+)", Pattern.CASE_INSENSITIVE);
+                Matcher matcher = sameLinePattern.matcher(line);
+                if (matcher.find() && !matcher.group(1).trim().isEmpty()) {
+                    data.put("dateOfBirth", matcher.group(1).trim());
+                } else if (!nextLine.isEmpty() && !nextLine.contains(":")) {
+                    data.put("dateOfBirth", nextLine);
+                }
+            }
+            else if (line.toLowerCase().matches(".*\\bmajor\\b.*:.*")) {
+                Pattern sameLinePattern = Pattern.compile("major\\s*:?\\s*(.+)", Pattern.CASE_INSENSITIVE);
+                Matcher matcher = sameLinePattern.matcher(line);
+                if (matcher.find() && !matcher.group(1).trim().isEmpty()) {
+                    data.put("major", matcher.group(1).trim());
+                } else if (!nextLine.isEmpty() && !nextLine.contains(":")) {
+                    data.put("major", nextLine);
+                }
+            }
+            else if (line.toLowerCase().contains("student id")) {
+                Pattern sameLinePattern = Pattern.compile("student\\s+id\\s*:?\\s*(.+)", Pattern.CASE_INSENSITIVE);
+                Matcher matcher = sameLinePattern.matcher(line);
+                if (matcher.find() && !matcher.group(1).trim().isEmpty()) {
+                    data.put("studentId", matcher.group(1).trim());
+                } else if (!nextLine.isEmpty() && !nextLine.contains(":")) {
+                    data.put("studentId", nextLine);
+                }
+            }
+        }
+
+        // Fallback: look for standalone ID pattern if not found
+        if (data.get("studentId").isEmpty()) {
+            Pattern idPattern = Pattern.compile("\\b(\\d{3}-\\d{3}-\\d{4})\\b");
+            Matcher idMatcher = idPattern.matcher(text);
+            if (idMatcher.find()) {
+                data.put("studentId", idMatcher.group(1));
+            }
+        }
+
+        // Fallback: look for date pattern if not found
+        if (data.get("dateOfBirth").isEmpty()) {
+            Pattern datePattern = Pattern.compile("\\b([A-Z][a-z]+\\s+\\d{1,2},?\\s+\\d{4})\\b");
+            Matcher dateMatcher = datePattern.matcher(text);
+            if (dateMatcher.find()) {
+                String potentialDate = dateMatcher.group(1);
+                // Make sure it's not part of a label
+                if (!text.substring(Math.max(0, dateMatcher.start() - 20), dateMatcher.start()).toLowerCase().contains("university")) {
+                    data.put("dateOfBirth", potentialDate);
+                }
+            }
+        }
+
+        return data;
     }
 
-    private void showDetectedTextDialog(String extracted) {
+    private boolean validateExtractedData(Map<String, String> data) {
+        // At minimum, we need student ID and at least one name field
+        boolean hasStudentId = !data.get("studentId").isEmpty();
+        boolean hasName = !data.get("firstName").isEmpty() || !data.get("lastName").isEmpty();
+
+        return hasStudentId && hasName;
+    }
+
+    private void markIDVerified(Map<String, String> data) {
+        extractedIDData = data;
+        isIDVerified = true;
+        btnSelectID.setText("✓ ID Verified");
+        btnSelectID.setEnabled(false);
+
+        StringBuilder summary = new StringBuilder("ID verified successfully!\n\n");
+        if (!data.get("firstName").isEmpty()) summary.append("First Name: ").append(data.get("firstName")).append("\n");
+        if (!data.get("lastName").isEmpty()) summary.append("Last Name: ").append(data.get("lastName")).append("\n");
+        if (!data.get("studentId").isEmpty()) summary.append("Student ID: ").append(data.get("studentId")).append("\n");
+        if (!data.get("dateOfBirth").isEmpty()) summary.append("Date of Birth: ").append(data.get("dateOfBirth")).append("\n");
+        if (!data.get("major").isEmpty()) summary.append("Major: ").append(data.get("major")).append("\n");
+
+        Toast.makeText(this, summary.toString(), Toast.LENGTH_LONG).show();
+    }
+
+    private void resetIDSelection() {
+        ivIDPreview.setImageDrawable(null);
+        ivIDPreview.setVisibility(View.GONE);
+        extractedIDData = null;
+        isIDVerified = false;
+        showImageSourceDialog();
+    }
+
+    private void showExtractedDataDialog(Map<String, String> data, String rawText) {
+        StringBuilder message = new StringBuilder();
+        message.append("Extracted Fields:\n\n");
+        message.append("First Name: ").append(data.get("firstName").isEmpty() ? "(not found)" : data.get("firstName")).append("\n");
+        message.append("Last Name: ").append(data.get("lastName").isEmpty() ? "(not found)" : data.get("lastName")).append("\n");
+        message.append("Student ID: ").append(data.get("studentId").isEmpty() ? "(not found)" : data.get("studentId")).append("\n");
+        message.append("Date of Birth: ").append(data.get("dateOfBirth").isEmpty() ? "(not found)" : data.get("dateOfBirth")).append("\n");
+        message.append("Major: ").append(data.get("major").isEmpty() ? "(not found)" : data.get("major")).append("\n\n");
+        message.append("Raw Text:\n").append(rawText.isEmpty() ? "(no text detected)" : rawText);
+
         new AlertDialog.Builder(this)
-                .setTitle("Detected Text")
-                .setMessage(extracted == null || extracted.isEmpty() ? "(no text found)" : extracted)
+                .setTitle("Extracted Data")
+                .setMessage(message.toString())
                 .setPositiveButton("OK", null)
                 .show();
     }
 
-    private void showVerificationFailedDialog(String extractedText) {
+    private void showVerificationFailedDialog(Map<String, String> data, String rawText) {
         new AlertDialog.Builder(this)
                 .setTitle("ID Verification Failed")
-                .setMessage("The image doesn't appear to be a valid university ID card. Please ensure the image is clear and complete.")
-                .setPositiveButton("Try Again", (dialog, which) -> {
-                    ivIDPreview.setImageDrawable(null);
-                    ivIDPreview.setVisibility(View.GONE);
-                    idCardUri = null;
-                    showImageSourceDialog();
-                })
+                .setMessage("Could not extract required fields from the ID card. Please ensure the image is clear and contains:\n\n• Student ID\n• First/Last Name\n\nMissing or incomplete data detected.")
+                .setPositiveButton("Try Again", (dialog, which) -> resetIDSelection())
                 .setNegativeButton("Cancel", null)
-                .setNeutralButton("See Detected Text", (dialog, which) -> showDetectedTextDialog(extractedText))
+                .setNeutralButton("See Extracted Data", (dialog, which) -> showExtractedDataDialog(data, rawText))
                 .show();
-    }
-
-    private boolean validateIDCard(String text) {
-        if (text == null || text.length() < 20) return false;
-        text = text.toLowerCase(Locale.ROOT);
-
-        boolean hasUniversity = text.contains("university") || text.contains("college") || text.contains("institute") || text.contains("universit") || text.contains("جامعة") || text.contains("الجامعة");
-        boolean hasStudent = text.contains("student") || text.contains("étudiant") || text.contains("id") || text.contains("card") || text.contains("matricule") || text.contains("student id");
-        boolean hasIdNumber = Pattern.compile("\\b\\d{5,12}\\b").matcher(text).find();
-        boolean hasYear = Pattern.compile("\\b20\\d{2}\\b").matcher(text).find();
-        boolean hasName = Pattern.compile("\\b[a-zA-Z]{2,}\\s+[a-zA-Z]{2,}\\b").matcher(text).find();
-
-        int score = 0;
-        if (hasIdNumber) score++;
-        if (hasYear) score++;
-        if (hasName) score++;
-
-        return hasUniversity && hasStudent && score >= 1;
     }
 
     private void createAccount() {
@@ -351,7 +407,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         if (!validateInputs(email, password, confirmPassword)) return;
 
-        if (!isIDVerified || idCardUri == null) {
+        if (!isIDVerified || extractedIDData == null) {
             Toast.makeText(this, "Please upload and verify your university ID card first", Toast.LENGTH_LONG).show();
             return;
         }
@@ -363,7 +419,7 @@ public class RegisterActivity extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         FirebaseUser user = mAuth.getCurrentUser();
                         if (user != null) {
-                            uploadIDCard(user.getUid(), () -> {
+                            saveUserDataToFirestore(user.getUid(), () -> {
                                 user.sendEmailVerification()
                                         .addOnCompleteListener(verifyTask -> {
                                             setUiBusy(false);
@@ -386,40 +442,30 @@ public class RegisterActivity extends AppCompatActivity {
                 });
     }
 
-    private void uploadIDCard(String userId, Runnable onSuccess) {
-        if (idCardUri == null) {
-            onSuccess.run();
-            return;
-        }
+    private void saveUserDataToFirestore(String userId, Runnable onSuccess) {
+        Map<String, Object> userData = new HashMap<>();
 
-        setUiBusy(true);
-        StorageReference idCardRef = storage.getReference().child("id_cards/" + userId + ".jpg");
-        idCardRef.putFile(idCardUri)
-                .addOnSuccessListener(taskSnapshot -> idCardRef.getDownloadUrl()
-                        .addOnSuccessListener(uri -> {
-                            Map<String, Object> userData = new HashMap<>();
-                            userData.put("idCardUrl", uri.toString());
-                            userData.put("idVerified", true);
-                            userData.put("verificationDate", System.currentTimeMillis());
+        // Add extracted ID card data
+        userData.put("firstName", extractedIDData.get("firstName"));
+        userData.put("lastName", extractedIDData.get("lastName"));
+        userData.put("studentId", extractedIDData.get("studentId"));
+        userData.put("dateOfBirth", extractedIDData.get("dateOfBirth"));
+        userData.put("major", extractedIDData.get("major"));
 
-                            db.collection("users").document(userId)
-                                    .set(userData)
-                                    .addOnSuccessListener(aVoid -> {
-                                        setUiBusy(false);
-                                        onSuccess.run();
-                                    })
-                                    .addOnFailureListener(e -> {
-                                        setUiBusy(false);
-                                        Toast.makeText(RegisterActivity.this, "Failed to save user data", Toast.LENGTH_SHORT).show();
-                                    });
-                        })
-                        .addOnFailureListener(e -> {
-                            setUiBusy(false);
-                            Toast.makeText(RegisterActivity.this, "Failed to get download URL", Toast.LENGTH_SHORT).show();
-                        }))
+        // Add verification metadata
+        userData.put("idVerified", true);
+        userData.put("verificationDate", System.currentTimeMillis());
+        userData.put("email", emailInput.getText().toString().trim());
+
+        db.collection("users").document(userId)
+                .set(userData)
+                .addOnSuccessListener(aVoid -> {
+                    setUiBusy(false);
+                    onSuccess.run();
+                })
                 .addOnFailureListener(e -> {
                     setUiBusy(false);
-                    Toast.makeText(RegisterActivity.this, "ID card upload failed: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(RegisterActivity.this, "Failed to save user data: " + e.getMessage(), Toast.LENGTH_LONG).show();
                 });
     }
 
@@ -458,7 +504,7 @@ public class RegisterActivity extends AppCompatActivity {
     private void showSuccessDialog() {
         new AlertDialog.Builder(this)
                 .setTitle("Registration Successful! ✓")
-                .setMessage("Your account has been created and your ID card has been verified.\n\nPlease check your email for the verification link before logging in.")
+                .setMessage("Your account has been created and your ID card data has been verified.\n\nPlease check your email for the verification link before logging in.")
                 .setPositiveButton("Go to Login", (dialog, which) -> finish())
                 .setCancelable(false)
                 .show();
