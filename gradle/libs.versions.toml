@@ -1,5 +1,7 @@
 [versions]
 agp = "8.13.0"
+firebaseMlVision = "24.0.3"
+firebaseMlVisionTextModel = "20.0.0"
 kotlin = "2.0.21"
 coreKtx = "1.17.0"
 junit = "4.13.2"
@@ -17,6 +19,8 @@ firebaseAuth = "24.0.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+firebase-ml-vision = { module = "com.google.firebase:firebase-ml-vision", version.ref = "firebaseMlVision" }
+firebase-ml-vision-text-model = { module = "com.google.firebase:firebase-ml-vision-text-model", version.ref = "firebaseMlVisionTextModel" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
