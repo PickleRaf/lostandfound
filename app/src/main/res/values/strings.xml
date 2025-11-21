@@ -10,7 +10,7 @@
     <string name="app_name">L&amp;F</string>
     <string name="welcome">Veni, Vidi, Found it</string>
     <string name="next">Login </string>
-    <string name="go_back">Logout</string>
+    <string name="go_back">Return</string>
     <string name="logo">App logo</string>
     <string name="image">Image coming soon</string>
     <string name="username">Username</string>
@@ -85,7 +85,46 @@
     <string name="google_sign_in_button_description">Google sign-in button</string>
     <string name="grid_item_name_placeholder">Item Name</string>
     <string name="grid_item_description_placeholder">Short description</string>
-    <string name="settings_title">Settings page</string>
     <string name="chat_list_item_title_placeholder">Item Title</string>
     <string name="chat_list_timestamp_placeholder">01/01/2024 12:00</string>
+    <!-- Settings Screen -->
+    <string name="settings_title">Settings</string>
+    <string name="settings_account_header">Account</string>
+    <string name="settings_change_password">Change Password</string>
+    <string name="settings_delete_account">Delete Account</string>
+    <string name="settings_notifications_header">Notifications</string>
+    <string name="settings_push_notifications">Push Notifications</string>
+    <string name="settings_push_notifications_desc">Receive notifications for new messages</string>
+    <string name="settings_chat_sounds">Chat Sounds</string>
+    <string name="settings_chat_sounds_desc">Play sound when receiving messages</string>
+    <string name="settings_email_notifications">Email Notifications</string>
+    <string name="settings_email_notifications_desc">Receive email updates about your items</string>
+    <string name="settings_about_header">About</string>
+    <string name="settings_app_tagline">Lost &amp; Found for Students</string>
+    <string name="settings_copyright">© 2025 LOFO Team</string>
+
+    <!-- Password Change Dialog -->
+    <string name="dialog_change_password_title">Change Password</string>
+    <string name="dialog_current_password_hint">Current Password</string>
+    <string name="dialog_new_password_hint">New Password (min 8 chars)</string>
+    <string name="dialog_confirm_password_hint">Confirm New Password</string>
+    <string name="password_changed_success">Password changed successfully!</string>
+    <string name="password_current_incorrect">Current password is incorrect</string>
+    <string name="password_google_user_error">Password cannot be changed for Google sign-in accounts</string>
+
+    <!-- Delete Account Dialog -->
+    <string name="dialog_delete_account_title">Delete Account</string>
+    <string name="dialog_delete_account_message">Are you sure you want to delete your account?\n\nThis will permanently delete:\n• Your profile information\n• All items you reported\n• All your chat conversations\n\nThis action CANNOT be undone!</string>
+    <string name="dialog_confirm_password_title">Confirm Password</string>
+    <string name="dialog_confirm_password_message">Enter your password to confirm account deletion</string>
+    <string name="account_deleted_success">Account deleted successfully</string>
+
+    <!-- Notification Messages -->
+    <string name="notifications_enabled">Notifications enabled</string>
+    <string name="notifications_disabled">Notifications disabled</string>
+    <string name="notifications_permission_denied">Notification permission denied</string>
+    <string name="chat_sounds_enabled">Chat sounds enabled</string>
+    <string name="chat_sounds_disabled">Chat sounds disabled</string>
+    <string name="email_notifications_enabled">Email notifications enabled</string>
+    <string name="email_notifications_disabled">Email notifications disabled</string>
 </resources>
