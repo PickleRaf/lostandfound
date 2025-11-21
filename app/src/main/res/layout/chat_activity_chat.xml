@@ -1,12 +1,102 @@
-<?xml version="1.0" encoding="utf-8"?> <androidx.constraintlayout.widget.ConstraintLayout
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#000000">
 
-    <!-- Chat Title -->
+    <!-- Chat Header: "Name / Role" -->
     <TextView
-        android:id="@+id/tvItemName"
+        android:id="@+id/tvChatHeader"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:padding="8dp" android:text="@string/chat_item_name_placeholder" android:textColor="#808080" android:textSize="20sp" android:textStyle="bold" android:fontFamily="@font/montserrat" app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent" android:gravity="center"/> <!-- Messages List --> <androidx.recyclerview.widget.RecyclerView android:id="@+id/recyclerMessages" android:layout_width="0dp" android:layout_height="0dp" android:padding="8dp" android:clipToPadding="false" android:background="@android:color/transparent" app:layout_constraintTop_toBottomOf="@id/tvItemName" app:layout_constraintBottom_toTopOf="@id/etMessage" app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"/> <!-- Message Input --> <EditText android:id="@+id/etMessage" android:layout_width="0dp" android:layout_height="50dp" android:background="@drawable/edittextstuff" android:hint="@string/chat_type_a_message" android:autofillHints="no" android:fontFamily="@font/montserrat" android:padding="8dp" android:textStyle="bold" android:inputType="textCapSentences|textMultiLine" app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toStartOf="@id/btnSend" app:layout_constraintBottom_toBottomOf="parent" android:layout_marginStart="8dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp"/> <!-- Send Button --> <Button android:id="@+id/btnSend" android:layout_width="70dp" android:layout_height="50dp" android:text="@string/chat_send_button" android:textColor="#FFFFFF" android:textStyle="bold" android:fontFamily="@font/montserrat" android:background="@drawable/edittextstuff" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintBottom_toBottomOf="parent" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp"/> <!-- Loading Spinner (Centered) --> <ProgressBar android:id="@+id/progressBarChat" android:layout_width="wrap_content" android:layout_height="wrap_content" android:visibility="gone" app:layout_constraintTop_toTopOf="parent" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"/> <!-- Empty State Text (Centered) --> <TextView android:id="@+id/tvEmptyStateChat" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/chat_no_messages_yet" android:textSize="18sp" android:textColor="#808080" android:fontFamily="@font/montserrat" android:visibility="gone" app:layout_constraintTop_toTopOf="parent" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"/> </androidx.constraintlayout.widget.ConstraintLayout>
+        android:padding="16dp"
+        android:text="Loading..."
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:fontFamily="@font/montserrat"
+        android:gravity="center"
+        android:background="#1A1A1A"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- Messages List -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerMessages"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:padding="8dp"
+        android:clipToPadding="false"
+        android:background="@android:color/transparent"
+        app:layout_constraintTop_toBottomOf="@id/tvChatHeader"
+        app:layout_constraintBottom_toTopOf="@id/etMessage"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- Message Input -->
+    <EditText
+        android:id="@+id/etMessage"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:background="@drawable/edittextstuff"
+        android:hint="@string/chat_type_a_message"
+        android:autofillHints="no"
+        android:fontFamily="@font/montserrat"
+        android:padding="12dp"
+        android:textStyle="bold"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#808080"
+        android:inputType="textCapSentences|textMultiLine"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/btnSend"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"/>
+
+    <!-- Send Button -->
+    <Button
+        android:id="@+id/btnSend"
+        android:layout_width="70dp"
+        android:layout_height="50dp"
+        android:text="@string/chat_send_button"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold"
+        android:fontFamily="@font/montserrat"
+        android:background="@drawable/edittextstuff"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"/>
+
+    <!-- Loading Spinner -->
+    <ProgressBar
+        android:id="@+id/progressBarChat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- Empty State Text -->
+    <TextView
+        android:id="@+id/tvEmptyStateChat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/chat_no_messages_yet"
+        android:textSize="18sp"
+        android:textColor="#808080"
+        android:fontFamily="@font/montserrat"
+        android:gravity="center"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

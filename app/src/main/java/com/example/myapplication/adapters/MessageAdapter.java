@@ -1,8 +1,10 @@
 package com.example.myapplication.adapters;
 
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -34,17 +36,27 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     @Override
     public void onBindViewHolder(@NonNull MessageViewHolder holder, int position) {
         Message message = messages.get(position);
-
         holder.tvMessage.setText(message.getText());
 
-        // Simple alignment: right if sent by current user, left otherwise
+        // Get the parent layout params
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.WRAP_CONTENT,
+                FrameLayout.LayoutParams.WRAP_CONTENT
+        );
+
         if (message.getSenderId().equals(currentUserId)) {
-            holder.tvMessage.setBackgroundResource(R.drawable.bg_message_sent); // create a drawable
-            holder.tvMessage.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_END);
+            // Current user's message - RIGHT side (sent)
+            params.gravity = Gravity.END;
+            params.setMargins(100, 8, 16, 8); // Left margin to push right
+            holder.tvMessage.setBackgroundResource(R.drawable.bg_message_sent);
         } else {
-            holder.tvMessage.setBackgroundResource(R.drawable.bg_message_received); // create a drawable
-            holder.tvMessage.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_START);
+            // Other user's message - LEFT side (received)
+            params.gravity = Gravity.START;
+            params.setMargins(16, 8, 100, 8); // Right margin to push left
+            holder.tvMessage.setBackgroundResource(R.drawable.bg_message_received);
         }
+
+        holder.tvMessage.setLayoutParams(params);
     }
 
     @Override
