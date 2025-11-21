@@ -6,28 +6,18 @@ import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.myapplication.activities.main.DashboardActivity;
 import com.example.myapplication.R;
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.GoogleAuthProvider;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -37,14 +27,7 @@ public class LoginActivity extends AppCompatActivity {
     // UI elements
     private EditText usernameInput, passwordInput;
     private Button btnStart;
-    private ImageButton googleBtn;
-    private ProgressBar progressBar; // PHASE 1: Loading indicator
-
-    // Google sign-in client
-    private GoogleSignInClient mGoogleSignInClient;
-
-    // Request code for Google sign-in activity result
-    private final int RC_SIGN_IN = 9001;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,16 +41,7 @@ public class LoginActivity extends AppCompatActivity {
         usernameInput = findViewById(R.id.etUsername);
         passwordInput = findViewById(R.id.etPassword);
         btnStart = findViewById(R.id.btnStart);
-        googleBtn = findViewById(R.id.googleBtn);
-        progressBar = findViewById(R.id.progressBar); // PHASE 1: Loading indicator
-
-        // Configure Google Sign-In options
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
-                .requestEmail()
-                .build();
-
-        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+        progressBar = findViewById(R.id.progressBar);
 
         // EMAIL/PASSWORD LOGIN BUTTON
         btnStart.setOnClickListener(v -> {
@@ -75,7 +49,7 @@ public class LoginActivity extends AppCompatActivity {
             String email = usernameInput.getText().toString().trim();
             String password = passwordInput.getText().toString().trim();
 
-            // PHASE 1: Input validation
+            // Input validation
             if (!validateInputs(email, password)) {
                 return; // Stop if validation fails
             }
@@ -89,7 +63,7 @@ public class LoginActivity extends AppCompatActivity {
                         showLoading(false); // Hide loading
 
                         if (task.isSuccessful()) {
-                            // PHASE 1: Check email verification
+                            // Check email verification
                             FirebaseUser user = mAuth.getCurrentUser();
                             if (user != null && user.isEmailVerified()) {
                                 // Email verified - proceed to dashboard
@@ -112,13 +86,6 @@ public class LoginActivity extends AppCompatActivity {
                     });
         });
 
-        // GOOGLE SIGN-IN BUTTON
-        googleBtn.setOnClickListener(v -> {
-            showLoading(true);
-            Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-            startActivityForResult(signInIntent, RC_SIGN_IN);
-        });
-
         // REGISTER BUTTON - Navigate to registration screen
         Button btnToRegister = findViewById(R.id.btnToRegister);
         btnToRegister.setOnClickListener(v -> {
@@ -134,7 +101,7 @@ public class LoginActivity extends AppCompatActivity {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
         if (currentUser != null) {
-            // PHASE 1: Check if email is verified
+            // Check if email is verified
             if (currentUser.isEmailVerified()) {
                 // User is logged in and verified - skip login screen
                 startActivity(new Intent(LoginActivity.this, DashboardActivity.class));
@@ -146,37 +113,7 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    // Handle Google Sign-In result
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == RC_SIGN_IN) {
-            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-            try {
-                GoogleSignInAccount account = task.getResult(ApiException.class);
-                if (account != null) {
-                    AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
-
-                    mAuth.signInWithCredential(credential)
-                            .addOnCompleteListener(this, task1 -> {
-                                showLoading(false);
-                                if (task1.isSuccessful()) {
-                                    startActivity(new Intent(LoginActivity.this, DashboardActivity.class));
-                                    finish();
-                                } else {
-                                    Toast.makeText(this, R.string.google_sign_in_failed, Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                }
-            } catch (ApiException e) {
-                showLoading(false);
-                Toast.makeText(this, R.string.google_sign_in_failed, Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-
-    // PHASE 1: Input validation method
+    // Input validation method
     private boolean validateInputs(String email, String password) {
         // Check if fields are empty
         if (email.isEmpty() || password.isEmpty()) {
@@ -201,7 +138,7 @@ public class LoginActivity extends AppCompatActivity {
         return true;
     }
 
-    // PHASE 1: Email verification dialog
+    // Email verification dialog
     private void showEmailVerificationDialog() {
         FirebaseUser user = mAuth.getCurrentUser();
         if (user == null) return;
@@ -228,10 +165,9 @@ public class LoginActivity extends AppCompatActivity {
                 .show();
     }
 
-    // PHASE 1: Show/hide loading indicator
+    // Show/hide loading indicator
     private void showLoading(boolean show) {
         progressBar.setVisibility(show ? View.VISIBLE : View.GONE);
         btnStart.setEnabled(!show);
-        googleBtn.setEnabled(!show);
     }
 }

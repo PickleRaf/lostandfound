@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -34,14 +35,14 @@ public class ReportItemActivity extends AppCompatActivity {
     private Spinner spinner;
     private EditText etDescription, etLocation;
     private Button btnReport, btnBack;
-    private ProgressBar progressBar; // PHASE 1: Loading indicator
-    private TextView tvDescCharCount, tvLocCharCount; // PHASE 3: Character counters
+    private ProgressBar progressBar;
+    private TextView tvDescCharCount, tvLocCharCount;
 
-    // PHASE 3: Rate limiting
+    // Rate limiting
     private long lastReportTime = 0;
     private static final long REPORT_COOLDOWN = 60000; // 1 minute in milliseconds
 
-    // PHASE 3: Character limits
+    // Character limits
     private static final int DESC_MAX_LENGTH = 200;
     private static final int LOC_MAX_LENGTH = 100;
 
@@ -67,12 +68,12 @@ public class ReportItemActivity extends AppCompatActivity {
         // Setup spinner (dropdown) for item type selection
         setupSpinner();
 
-        // PHASE 3: Setup character counters
+        // Setup character counters
         setupCharacterCounters();
 
         // SUBMIT REPORT BUTTON
         btnReport.setOnClickListener(v -> {
-            // PHASE 3: Check rate limit
+            // Check rate limit
             long currentTime = System.currentTimeMillis();
             if (currentTime - lastReportTime < REPORT_COOLDOWN) {
                 long remainingTime = (REPORT_COOLDOWN - (currentTime - lastReportTime)) / 1000;
@@ -86,7 +87,7 @@ public class ReportItemActivity extends AppCompatActivity {
             String description = etDescription.getText().toString().trim();
             String location = etLocation.getText().toString().trim();
 
-            // PHASE 1: Validate all fields are filled
+            // Validate all fields are filled
             if (!validateInputs(title, description, location)) {
                 return;
             }
@@ -101,7 +102,7 @@ public class ReportItemActivity extends AppCompatActivity {
             lostItem.put("location", location);
             lostItem.put("dateReported", FieldValue.serverTimestamp());
             lostItem.put("userId", mAuth.getCurrentUser().getUid());
-            lostItem.put("status", "active"); // PHASE 2: Item status management
+            lostItem.put("status", "active");
 
             // Save to Firestore database
             db.collection("lost_items")
@@ -123,7 +124,7 @@ public class ReportItemActivity extends AppCompatActivity {
         btnBack.setOnClickListener(v -> finish());
     }
 
-    // Setup spinner with custom styling
+    // Setup spinner with custom styling and improved alignment
     private void setupSpinner() {
         ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(
                 this,
@@ -142,12 +143,34 @@ public class ReportItemActivity extends AppCompatActivity {
                 View view = super.getDropDownView(position, convertView, parent);
                 TextView tv = (TextView) view;
 
-                // Gray out the placeholder item
+                // Set proper alignment for dropdown items
+                tv.setGravity(Gravity.CENTER_VERTICAL);
+
+                // Gray out the placeholder item, white for others
                 if (position == 0) {
                     tv.setTextColor(Color.GRAY);
                 } else {
                     tv.setTextColor(Color.WHITE);
                 }
+                return view;
+            }
+
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                // Get the default view
+                View view = super.getView(position, convertView, parent);
+                TextView tv = (TextView) view;
+
+                // Set proper alignment for closed spinner
+                tv.setGravity(Gravity.CENTER_VERTICAL);
+
+                // Gray out placeholder when selected
+                if (position == 0) {
+                    tv.setTextColor(Color.GRAY);
+                } else {
+                    tv.setTextColor(Color.WHITE);
+                }
+
                 return view;
             }
         };
@@ -157,7 +180,7 @@ public class ReportItemActivity extends AppCompatActivity {
         spinner.setAdapter(adapter);
     }
 
-    // PHASE 3: Setup character counters for text fields
+    // Setup character counters for text fields
     private void setupCharacterCounters() {
         // Description character counter
         etDescription.addTextChangedListener(new TextWatcher() {
@@ -220,7 +243,7 @@ public class ReportItemActivity extends AppCompatActivity {
         });
     }
 
-    // PHASE 1: Validate form inputs
+    // Validate form inputs
     private boolean validateInputs(String title, String description, String location) {
         // Check if item type is selected
         if (title.isEmpty() || title.equals("Select object type")) {
@@ -261,7 +284,7 @@ public class ReportItemActivity extends AppCompatActivity {
         return true;
     }
 
-    // PHASE 1: Show/hide loading indicator
+    // Show/hide loading indicator
     private void showLoading(boolean show) {
         progressBar.setVisibility(show ? View.VISIBLE : View.GONE);
         btnReport.setEnabled(!show);
