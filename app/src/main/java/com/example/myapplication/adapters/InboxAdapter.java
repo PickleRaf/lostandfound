@@ -15,6 +15,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.ChatViewHolder> {
 
@@ -41,12 +42,13 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.ChatViewHold
     @Override
     public void onBindViewHolder(@NonNull ChatViewHolder holder, int position) {
         ChatItem chatItem = chatList.get(position);
-        holder.tvChatTitle.setText(chatItem.getTitle());
 
-        // Format timestamp
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());
-        String dateStr = sdf.format(new Date(chatItem.getTimestamp()));
-        holder.tvTimestamp.setText(dateStr);
+        // Display: "Name - Role - Item Title"
+        holder.tvChatTitle.setText(chatItem.getDisplayTitle());
+
+        // Format timestamp as relative time
+        String timeAgo = getRelativeTime(chatItem.getTimestamp());
+        holder.tvTimestamp.setText(timeAgo);
 
         holder.itemView.setOnClickListener(v -> listener.onChatClick(chatItem));
     }
@@ -54,6 +56,30 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.ChatViewHold
     @Override
     public int getItemCount() {
         return chatList.size();
+    }
+
+    // Get relative time string (e.g., "2 hours ago", "Yesterday")
+    private String getRelativeTime(long timestamp) {
+        long now = System.currentTimeMillis();
+        long diff = now - timestamp;
+
+        if (diff < TimeUnit.MINUTES.toMillis(1)) {
+            return "Just now";
+        } else if (diff < TimeUnit.HOURS.toMillis(1)) {
+            long mins = TimeUnit.MILLISECONDS.toMinutes(diff);
+            return mins + (mins == 1 ? " minute ago" : " minutes ago");
+        } else if (diff < TimeUnit.DAYS.toMillis(1)) {
+            long hours = TimeUnit.MILLISECONDS.toHours(diff);
+            return hours + (hours == 1 ? " hour ago" : " hours ago");
+        } else if (diff < TimeUnit.DAYS.toMillis(2)) {
+            return "Yesterday";
+        } else if (diff < TimeUnit.DAYS.toMillis(7)) {
+            long days = TimeUnit.MILLISECONDS.toDays(diff);
+            return days + " days ago";
+        } else {
+            SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault());
+            return sdf.format(new Date(timestamp));
+        }
     }
 
     static class ChatViewHolder extends RecyclerView.ViewHolder {

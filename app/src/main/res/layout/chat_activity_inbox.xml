@@ -17,7 +17,7 @@
         android:gravity="center"
         android:padding="16dp"
         android:text="@string/inbox_title"
-        android:textColor="#808080"
+        android:textColor="#FFFFFF"
         android:textSize="40sp"
         android:textStyle="bold"
         app:layout_constraintTop_toTopOf="parent"

@@ -22,19 +22,17 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class InboxActivity extends AppCompatActivity {
 
-    // UI components
     private RecyclerView recyclerViewChats;
     private InboxAdapter adapter;
-    private ProgressBar progressBar; // PHASE 1: Loading indicator
-    private TextView tvEmptyState; // PHASE 1: Empty state message
+    private ProgressBar progressBar;
+    private TextView tvEmptyState;
 
-    // Data
     private List<ChatItem> chatList;
 
-    // Firebase
     private FirebaseFirestore db;
     private String currentUserId;
 
@@ -43,85 +41,64 @@ public class InboxActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.chat_activity_inbox);
 
-        // Initialize Firebase
         db = FirebaseFirestore.getInstance();
         currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-        // Setup UI elements
         recyclerViewChats = findViewById(R.id.recyclerViewChats);
         progressBar = findViewById(R.id.progressBarInbox);
         tvEmptyState = findViewById(R.id.tvEmptyStateInbox);
 
         recyclerViewChats.setLayoutManager(new LinearLayoutManager(this));
 
-        // Initialize chat list and adapter
         chatList = new ArrayList<>();
         adapter = new InboxAdapter(chatList, chatItem -> {
-            // When a chat is clicked, open Chat activity
             Intent intent = new Intent(InboxActivity.this, ChatActivity.class);
             intent.putExtra("chatId", chatItem.getChatId());
             startActivity(intent);
         });
         recyclerViewChats.setAdapter(adapter);
 
-        // PHASE 2: Setup swipe-to-delete functionality
         setupSwipeToDelete();
-
-        // Load user's chats
         loadUserChats();
     }
 
-    // PHASE 2: Setup swipe-to-delete functionality
     private void setupSwipeToDelete() {
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(
-                0,
-                ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT // Allow swiping left or right
-        ) {
+                0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
             @Override
             public boolean onMove(@NonNull RecyclerView recyclerView,
                                   @NonNull RecyclerView.ViewHolder viewHolder,
                                   @NonNull RecyclerView.ViewHolder target) {
-                return false; // We don't support moving items
+                return false;
             }
 
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-                // Get the position of swiped item
                 int position = viewHolder.getAdapterPosition();
                 ChatItem chat = chatList.get(position);
 
-                // Archive the chat in Firestore
                 db.collection("chats").document(chat.getChatId())
                         .update("archived_" + currentUserId, true)
                         .addOnSuccessListener(aVoid -> {
-                            // Remove from local list and update UI
                             chatList.remove(position);
                             adapter.notifyItemRemoved(position);
 
-                            // Show empty state if no chats left
                             if (chatList.isEmpty()) {
                                 showEmptyState(true);
                             }
 
-                            Toast.makeText(InboxActivity.this, "Chat archived",
-                                    Toast.LENGTH_SHORT).show();
+                            Toast.makeText(InboxActivity.this, "Chat archived", Toast.LENGTH_SHORT).show();
                         })
                         .addOnFailureListener(e -> {
-                            // Restore item if archive failed
                             adapter.notifyItemChanged(position);
-                            Toast.makeText(InboxActivity.this, "Failed to archive chat",
-                                    Toast.LENGTH_SHORT).show();
+                            Toast.makeText(InboxActivity.this, "Failed to archive chat", Toast.LENGTH_SHORT).show();
                         });
             }
         });
-
-        // Attach the ItemTouchHelper to RecyclerView
         itemTouchHelper.attachToRecyclerView(recyclerViewChats);
     }
 
-    // Load chats where current user is the claimer
     private void loadUserChats() {
-        // Show loading
         showLoading(true);
 
         db.collection("chats")
@@ -130,73 +107,35 @@ public class InboxActivity extends AppCompatActivity {
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     chatList.clear();
 
-                    // Process each chat document
                     for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
-                        // PHASE 2: Skip archived chats
                         Boolean archived = doc.getBoolean("archived_" + currentUserId);
-                        if (archived != null && archived) {
-                            continue; // Skip this chat
-                        }
+                        if (archived != null && archived) continue;
 
-                        String chatId = doc.getId();
-                        String title = doc.getString("title");
-                        String itemId = doc.getString("itemId");
-                        String userId = doc.getString("userId");
-                        String reporterId = doc.getString("reporterId");
-
-                        // Safe timestamp handling
-                        long timestamp = 0;
-                        try {
-                            Object timestampObj = doc.get("timestamp");
-                            if (timestampObj instanceof Long) {
-                                timestamp = (Long) timestampObj;
-                            } else if (timestampObj instanceof Double) {
-                                timestamp = ((Double) timestampObj).longValue();
-                            } else if (timestampObj instanceof String) {
-                                timestamp = Long.parseLong((String) timestampObj);
-                            }
-                        } catch (Exception e) {
-                            timestamp = System.currentTimeMillis(); // Fallback
-                        }
-
-                        // Create ChatItem object and add to list
-                        ChatItem chatItem = new ChatItem(
-                                chatId,
-                                title != null ? title : "Unknown Item",
-                                itemId,
-                                userId,
-                                reporterId,
-                                timestamp
-                        );
+                        ChatItem chatItem = createChatItem(doc);
+                        // Current user is the claimer, so other user is the Finder
+                        chatItem.setOtherUserRole("Finder");
                         chatList.add(chatItem);
                     }
 
-                    // Load chats where user is the reporter
                     loadReporterChats();
                 })
                 .addOnFailureListener(e -> {
                     showLoading(false);
-                    Toast.makeText(this, "Error loading chats: " + e.getMessage(),
-                            Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Error loading chats: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
     }
 
-    // Load chats where current user is the reporter (finder)
     private void loadReporterChats() {
         db.collection("chats")
                 .whereEqualTo("reporterId", currentUserId)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
-                        // PHASE 2: Skip archived chats
                         Boolean archived = doc.getBoolean("archived_" + currentUserId);
-                        if (archived != null && archived) {
-                            continue;
-                        }
+                        if (archived != null && archived) continue;
 
                         String chatId = doc.getId();
 
-                        // Check if chat is not already in the list (avoid duplicates)
                         boolean exists = false;
                         for (ChatItem item : chatList) {
                             if (item.getChatId().equals(chatId)) {
@@ -205,36 +144,10 @@ public class InboxActivity extends AppCompatActivity {
                             }
                         }
 
-                        // Only add if not duplicate
                         if (!exists) {
-                            String title = doc.getString("title");
-                            String itemId = doc.getString("itemId");
-                            String userId = doc.getString("userId");
-                            String reporterId = doc.getString("reporterId");
-
-                            // Safe timestamp handling
-                            long timestamp = 0;
-                            try {
-                                Object timestampObj = doc.get("timestamp");
-                                if (timestampObj instanceof Long) {
-                                    timestamp = (Long) timestampObj;
-                                } else if (timestampObj instanceof Double) {
-                                    timestamp = ((Double) timestampObj).longValue();
-                                } else if (timestampObj instanceof String) {
-                                    timestamp = Long.parseLong((String) timestampObj);
-                                }
-                            } catch (Exception e) {
-                                timestamp = System.currentTimeMillis();
-                            }
-
-                            ChatItem chatItem = new ChatItem(
-                                    chatId,
-                                    title != null ? title : "Unknown Item",
-                                    itemId,
-                                    userId,
-                                    reporterId,
-                                    timestamp
-                            );
+                            ChatItem chatItem = createChatItem(doc);
+                            // Current user is the finder, so other user is the Claimer
+                            chatItem.setOtherUserRole("Claimer");
                             chatList.add(chatItem);
                         }
                     }
@@ -242,32 +155,114 @@ public class InboxActivity extends AppCompatActivity {
                     // Sort by timestamp (most recent first)
                     chatList.sort((a, b) -> Long.compare(b.getTimestamp(), a.getTimestamp()));
 
-                    // Hide loading
-                    showLoading(false);
-
-                    // PHASE 1: Show empty state if no chats
-                    if (chatList.isEmpty()) {
-                        showEmptyState(true);
-                    } else {
-                        showEmptyState(false);
-                        // Update UI
-                        adapter.notifyDataSetChanged();
-                    }
+                    // Load user names for all chats
+                    loadUserNames();
                 })
                 .addOnFailureListener(e -> {
                     showLoading(false);
-                    Toast.makeText(this, "Error loading chats: " + e.getMessage(),
-                            Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Error loading chats: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
     }
 
-    // PHASE 1: Show/hide loading indicator
+    private ChatItem createChatItem(QueryDocumentSnapshot doc) {
+        String chatId = doc.getId();
+        String title = doc.getString("title");
+        String itemId = doc.getString("itemId");
+        String userId = doc.getString("userId");
+        String reporterId = doc.getString("reporterId");
+
+        long timestamp = 0;
+        try {
+            Object timestampObj = doc.get("timestamp");
+            if (timestampObj instanceof Long) {
+                timestamp = (Long) timestampObj;
+            } else if (timestampObj instanceof Double) {
+                timestamp = ((Double) timestampObj).longValue();
+            } else if (timestampObj instanceof com.google.firebase.Timestamp) {
+                timestamp = ((com.google.firebase.Timestamp) timestampObj).toDate().getTime();
+            }
+        } catch (Exception e) {
+            timestamp = System.currentTimeMillis();
+        }
+
+        return new ChatItem(chatId, title != null ? title : "Unknown Item", itemId, userId, reporterId, timestamp);
+    }
+
+    private void loadUserNames() {
+        if (chatList.isEmpty()) {
+            showLoading(false);
+            showEmptyState(true);
+            return;
+        }
+
+        AtomicInteger pendingRequests = new AtomicInteger(chatList.size());
+
+        for (ChatItem chat : chatList) {
+            // Determine which user's name to fetch (the other user in the chat)
+            String otherUserId;
+            if (chat.getUserId().equals(currentUserId)) {
+                // Current user is claimer, fetch reporter's name
+                otherUserId = chat.getReporterId();
+            } else {
+                // Current user is reporter, fetch claimer's name
+                otherUserId = chat.getUserId();
+            }
+
+            db.collection("users").document(otherUserId)
+                    .get()
+                    .addOnSuccessListener(userDoc -> {
+                        if (userDoc.exists()) {
+                            String firstName = userDoc.getString("firstName");
+                            String lastName = userDoc.getString("lastName");
+
+                            String displayName = "";
+                            if (firstName != null && !firstName.isEmpty()) {
+                                displayName = firstName;
+                            }
+                            if (lastName != null && !lastName.isEmpty()) {
+                                displayName += (displayName.isEmpty() ? "" : " ") + lastName;
+                            }
+
+                            if (displayName.isEmpty()) {
+                                displayName = "Unknown User";
+                            }
+
+                            chat.setOtherUserName(displayName);
+                        } else {
+                            chat.setOtherUserName("Unknown User");
+                        }
+
+                        // Check if all requests are done
+                        if (pendingRequests.decrementAndGet() == 0) {
+                            finishLoading();
+                        }
+                    })
+                    .addOnFailureListener(e -> {
+                        chat.setOtherUserName("Unknown User");
+
+                        if (pendingRequests.decrementAndGet() == 0) {
+                            finishLoading();
+                        }
+                    });
+        }
+    }
+
+    private void finishLoading() {
+        showLoading(false);
+
+        if (chatList.isEmpty()) {
+            showEmptyState(true);
+        } else {
+            showEmptyState(false);
+            adapter.notifyDataSetChanged();
+        }
+    }
+
     private void showLoading(boolean show) {
         progressBar.setVisibility(show ? View.VISIBLE : View.GONE);
         recyclerViewChats.setVisibility(show ? View.GONE : View.VISIBLE);
     }
 
-    // PHASE 1: Show/hide empty state message
     private void showEmptyState(boolean show) {
         if (show) {
             tvEmptyState.setVisibility(View.VISIBLE);
