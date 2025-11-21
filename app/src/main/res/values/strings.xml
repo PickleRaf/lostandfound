@@ -87,10 +87,12 @@
     <string name="grid_item_description_placeholder">Short description</string>
     <string name="chat_list_item_title_placeholder">Item Title</string>
     <string name="chat_list_timestamp_placeholder">01/01/2024 12:00</string>
+
     <!-- Settings Screen -->
     <string name="settings_title">Settings</string>
     <string name="settings_account_header">Account</string>
     <string name="settings_change_password">Change Password</string>
+    <string name="settings_logout">Logout</string>
     <string name="settings_delete_account">Delete Account</string>
     <string name="settings_notifications_header">Notifications</string>
     <string name="settings_push_notifications">Push Notifications</string>
@@ -102,22 +104,61 @@
     <string name="settings_about_header">About</string>
     <string name="settings_app_tagline">Lost &amp; Found for Students</string>
     <string name="settings_copyright">© 2025 LOFO Team</string>
+    <string name="settings_version">Version %1$s</string>
+    <string name="settings_build">Build %1$d</string>
+    <string name="settings_version_na">Version N/A</string>
+    <string name="settings_build_na">Build N/A</string>
+    <string name="settings_version_placeholder">Version 1.0.0</string>
+    <string name="settings_build_placeholder">Build 1</string>
+    <string name="settings_error_no_user">Error: No user logged in</string>
+    <string name="settings_update_preference_failed">Failed to update preference</string>
+
+    <!-- Logout Dialog -->
+    <string name="dialog_logout_title">Logout</string>
+    <string name="dialog_logout_message">Are you sure you want to logout?</string>
+    <string name="dialog_logout_confirm">Logout</string>
+    <string name="logout_success">Logged out successfully</string>
 
     <!-- Password Change Dialog -->
     <string name="dialog_change_password_title">Change Password</string>
     <string name="dialog_current_password_hint">Current Password</string>
     <string name="dialog_new_password_hint">New Password (min 8 chars)</string>
     <string name="dialog_confirm_password_hint">Confirm New Password</string>
+    <string name="dialog_change_button">Change</string>
+    <string name="dialog_cancel">Cancel</string>
     <string name="password_changed_success">Password changed successfully!</string>
     <string name="password_current_incorrect">Current password is incorrect</string>
     <string name="password_google_user_error">Password cannot be changed for Google sign-in accounts</string>
+    <string name="password_change_failed">Failed to change password: %1$s</string>
+
+    <!-- Password Validation -->
+    <string name="password_validation_empty_fields">Please fill all fields</string>
+    <string name="password_validation_min_length">New password must be at least 8 characters</string>
+    <string name="password_validation_uppercase">Password must contain an uppercase letter</string>
+    <string name="password_validation_lowercase">Password must contain a lowercase letter</string>
+    <string name="password_validation_number">Password must contain a number</string>
+    <string name="password_validation_mismatch">New passwords do not match</string>
+    <string name="password_validation_same_as_current">New password must be different from current</string>
 
     <!-- Delete Account Dialog -->
     <string name="dialog_delete_account_title">Delete Account</string>
     <string name="dialog_delete_account_message">Are you sure you want to delete your account?\n\nThis will permanently delete:\n• Your profile information\n• All items you reported\n• All your chat conversations\n\nThis action CANNOT be undone!</string>
+    <string name="dialog_delete_button">Delete</string>
     <string name="dialog_confirm_password_title">Confirm Password</string>
     <string name="dialog_confirm_password_message">Enter your password to confirm account deletion</string>
+    <string name="dialog_delete_account_button">Delete Account</string>
+    <string name="dialog_delete_confirm_title">Confirm Deletion</string>
+    <string name="dialog_delete_type_delete_message">Type DELETE to confirm account deletion</string>
+    <string name="dialog_delete_type_delete_hint">Type DELETE</string>
+    <string name="dialog_confirm_button">Confirm</string>
+    <string name="dialog_enter_password_hint">Enter your password</string>
+    <string name="password_required">Password required</string>
+    <string name="password_incorrect">Incorrect password</string>
+    <string name="delete_confirmation_incorrect">You must type DELETE to confirm</string>
     <string name="account_deleted_success">Account deleted successfully</string>
+    <string name="delete_error_items">Error deleting items: %1$s</string>
+    <string name="delete_error_profile">Error deleting profile: %1$s</string>
+    <string name="delete_error_account">Error deleting account: %1$s</string>
 
     <!-- Notification Messages -->
     <string name="notifications_enabled">Notifications enabled</string>

@@ -33,7 +33,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 public class SettingsActivity extends AppCompatActivity {
 
     // UI Elements
-    private Button btnChangePassword, btnDeleteAccount, btnBack;
+    private Button btnChangePassword, btnLogout, btnDeleteAccount, btnBack;
     private SwitchCompat switchNotifications, switchChatSounds, switchEmailNotifs;
     private TextView tvAppVersion, tvBuildNumber;
     private ProgressBar progressBar;
@@ -66,6 +66,7 @@ public class SettingsActivity extends AppCompatActivity {
 
         // Link UI elements
         btnChangePassword = findViewById(R.id.btnChangePassword);
+        btnLogout = findViewById(R.id.btnLogout);
         btnDeleteAccount = findViewById(R.id.btnDeleteAccount);
         btnBack = findViewById(R.id.btnBacksettings);
         switchNotifications = findViewById(R.id.switchNotifications);
@@ -82,11 +83,11 @@ public class SettingsActivity extends AppCompatActivity {
                     if (isGranted) {
                         switchNotifications.setChecked(true);
                         saveNotificationPreference(KEY_NOTIFICATIONS, true);
-                        Toast.makeText(this, "Notifications enabled", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, R.string.notifications_enabled, Toast.LENGTH_SHORT).show();
                     } else {
                         switchNotifications.setChecked(false);
                         saveNotificationPreference(KEY_NOTIFICATIONS, false);
-                        Toast.makeText(this, "Notification permission denied", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, R.string.notifications_permission_denied, Toast.LENGTH_SHORT).show();
                     }
                 }
         );
@@ -121,11 +122,11 @@ public class SettingsActivity extends AppCompatActivity {
             } else {
                 versionCode = pInfo.versionCode;
             }
-            tvAppVersion.setText("Version " + version);
-            tvBuildNumber.setText("Build " + versionCode);
+            tvAppVersion.setText(getString(R.string.settings_version, version));
+            tvBuildNumber.setText(getString(R.string.settings_build, versionCode));
         } catch (PackageManager.NameNotFoundException e) {
-            tvAppVersion.setText("Version N/A");
-            tvBuildNumber.setText("Build N/A");
+            tvAppVersion.setText(R.string.settings_version_na);
+            tvBuildNumber.setText(R.string.settings_build_na);
         }
     }
 
@@ -135,6 +136,9 @@ public class SettingsActivity extends AppCompatActivity {
 
         // Change Password
         btnChangePassword.setOnClickListener(v -> showChangePasswordDialog());
+
+        // Logout
+        btnLogout.setOnClickListener(v -> showLogoutDialog());
 
         // Delete Account
         btnDeleteAccount.setOnClickListener(v -> showDeleteAccountDialog());
@@ -147,18 +151,18 @@ public class SettingsActivity extends AppCompatActivity {
                     notificationPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS);
                 } else {
                     saveNotificationPreference(KEY_NOTIFICATIONS, true);
-                    Toast.makeText(this, "Notifications enabled", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, R.string.notifications_enabled, Toast.LENGTH_SHORT).show();
                 }
             } else {
                 saveNotificationPreference(KEY_NOTIFICATIONS, false);
-                Toast.makeText(this, "Notifications disabled", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.notifications_disabled, Toast.LENGTH_SHORT).show();
             }
         });
 
         switchChatSounds.setOnCheckedChangeListener((buttonView, isChecked) -> {
             saveNotificationPreference(KEY_CHAT_SOUNDS, isChecked);
             Toast.makeText(this,
-                    isChecked ? "Chat sounds enabled" : "Chat sounds disabled",
+                    isChecked ? R.string.chat_sounds_enabled : R.string.chat_sounds_disabled,
                     Toast.LENGTH_SHORT).show();
         });
 
@@ -175,24 +179,47 @@ public class SettingsActivity extends AppCompatActivity {
                     .update("emailNotifications", enabled)
                     .addOnSuccessListener(aVoid ->
                             Toast.makeText(this,
-                                    enabled ? "Email notifications enabled" : "Email notifications disabled",
+                                    enabled ? R.string.email_notifications_enabled : R.string.email_notifications_disabled,
                                     Toast.LENGTH_SHORT).show())
                     .addOnFailureListener(e ->
-                            Toast.makeText(this, "Failed to update preference", Toast.LENGTH_SHORT).show());
+                            Toast.makeText(this, R.string.settings_update_preference_failed, Toast.LENGTH_SHORT).show());
         }
+    }
+
+    private void showLogoutDialog() {
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.dialog_logout_title)
+                .setMessage(R.string.dialog_logout_message)
+                .setPositiveButton(R.string.dialog_logout_confirm, (dialog, which) -> {
+                    // Sign out from Firebase
+                    mAuth.signOut();
+
+                    // Clear preferences if needed
+                    // prefs.edit().clear().apply(); // Uncomment if you want to clear settings on logout
+
+                    Toast.makeText(this, R.string.logout_success, Toast.LENGTH_SHORT).show();
+
+                    // Navigate to login screen
+                    Intent intent = new Intent(SettingsActivity.this, LoginActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                    finish();
+                })
+                .setNegativeButton(R.string.dialog_cancel, null)
+                .show();
     }
 
     private void showChangePasswordDialog() {
         FirebaseUser user = mAuth.getCurrentUser();
         if (user == null || user.getEmail() == null) {
-            Toast.makeText(this, "Error: No user logged in", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.settings_error_no_user, Toast.LENGTH_SHORT).show();
             return;
         }
 
         // Check if user signed in with Google
         if (user.getProviderData().size() > 1 &&
                 user.getProviderData().get(1).getProviderId().equals("google.com")) {
-            Toast.makeText(this, "Password cannot be changed for Google sign-in accounts",
+            Toast.makeText(this, R.string.password_google_user_error,
                     Toast.LENGTH_LONG).show();
             return;
         }
@@ -202,24 +229,24 @@ public class SettingsActivity extends AppCompatActivity {
         layout.setPadding(50, 40, 50, 10);
 
         EditText etCurrentPassword = new EditText(this);
-        etCurrentPassword.setHint("Current Password");
+        etCurrentPassword.setHint(R.string.dialog_current_password_hint);
         etCurrentPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
         layout.addView(etCurrentPassword);
 
         EditText etNewPassword = new EditText(this);
-        etNewPassword.setHint("New Password (min 8 chars)");
+        etNewPassword.setHint(R.string.dialog_new_password_hint);
         etNewPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
         layout.addView(etNewPassword);
 
         EditText etConfirmPassword = new EditText(this);
-        etConfirmPassword.setHint("Confirm New Password");
+        etConfirmPassword.setHint(R.string.dialog_confirm_password_hint);
         etConfirmPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
         layout.addView(etConfirmPassword);
 
         new AlertDialog.Builder(this)
-                .setTitle("Change Password")
+                .setTitle(R.string.dialog_change_password_title)
                 .setView(layout)
-                .setPositiveButton("Change", (dialog, which) -> {
+                .setPositiveButton(R.string.dialog_change_button, (dialog, which) -> {
                     String currentPwd = etCurrentPassword.getText().toString().trim();
                     String newPwd = etNewPassword.getText().toString().trim();
                     String confirmPwd = etConfirmPassword.getText().toString().trim();
@@ -228,37 +255,37 @@ public class SettingsActivity extends AppCompatActivity {
                         changePassword(user, currentPwd, newPwd);
                     }
                 })
-                .setNegativeButton("Cancel", null)
+                .setNegativeButton(R.string.dialog_cancel, null)
                 .show();
     }
 
     private boolean validatePasswordChange(String current, String newPwd, String confirm) {
         if (current.isEmpty() || newPwd.isEmpty() || confirm.isEmpty()) {
-            Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.password_validation_empty_fields, Toast.LENGTH_SHORT).show();
             return false;
         }
         if (newPwd.length() < 8) {
-            Toast.makeText(this, "New password must be at least 8 characters", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.password_validation_min_length, Toast.LENGTH_SHORT).show();
             return false;
         }
         if (!newPwd.matches(".*[A-Z].*")) {
-            Toast.makeText(this, "Password must contain an uppercase letter", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.password_validation_uppercase, Toast.LENGTH_SHORT).show();
             return false;
         }
         if (!newPwd.matches(".*[a-z].*")) {
-            Toast.makeText(this, "Password must contain a lowercase letter", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.password_validation_lowercase, Toast.LENGTH_SHORT).show();
             return false;
         }
         if (!newPwd.matches(".*\\d.*")) {
-            Toast.makeText(this, "Password must contain a number", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.password_validation_number, Toast.LENGTH_SHORT).show();
             return false;
         }
         if (!newPwd.equals(confirm)) {
-            Toast.makeText(this, "New passwords do not match", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.password_validation_mismatch, Toast.LENGTH_SHORT).show();
             return false;
         }
         if (current.equals(newPwd)) {
-            Toast.makeText(this, "New password must be different from current", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.password_validation_same_as_current, Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;
@@ -276,32 +303,27 @@ public class SettingsActivity extends AppCompatActivity {
                     user.updatePassword(newPwd)
                             .addOnSuccessListener(aVoid1 -> {
                                 showLoading(false);
-                                Toast.makeText(this, "Password changed successfully!",
+                                Toast.makeText(this, R.string.password_changed_success,
                                         Toast.LENGTH_SHORT).show();
                             })
                             .addOnFailureListener(e -> {
                                 showLoading(false);
-                                Toast.makeText(this, "Failed to change password: " + e.getMessage(),
+                                Toast.makeText(this, getString(R.string.password_change_failed, e.getMessage()),
                                         Toast.LENGTH_LONG).show();
                             });
                 })
                 .addOnFailureListener(e -> {
                     showLoading(false);
-                    Toast.makeText(this, "Current password is incorrect", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, R.string.password_current_incorrect, Toast.LENGTH_SHORT).show();
                 });
     }
 
     private void showDeleteAccountDialog() {
         new AlertDialog.Builder(this)
-                .setTitle("Delete Account")
-                .setMessage("Are you sure you want to delete your account?\n\n" +
-                        "This will permanently delete:\n" +
-                        "• Your profile information\n" +
-                        "• All items you reported\n" +
-                        "• All your chat conversations\n\n" +
-                        "This action CANNOT be undone!")
-                .setPositiveButton("Delete", (dialog, which) -> showPasswordConfirmationForDelete())
-                .setNegativeButton("Cancel", null)
+                .setTitle(R.string.dialog_delete_account_title)
+                .setMessage(R.string.dialog_delete_account_message)
+                .setPositiveButton(R.string.dialog_delete_button, (dialog, which) -> showPasswordConfirmationForDelete())
+                .setNegativeButton(R.string.dialog_cancel, null)
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .show();
     }
@@ -316,42 +338,45 @@ public class SettingsActivity extends AppCompatActivity {
 
         if (isGoogleUser) {
             // For Google users, just confirm with a dialog
+            EditText etConfirm = new EditText(this);
+            etConfirm.setHint(R.string.dialog_delete_type_delete_hint);
+            etConfirm.setPadding(50, 40, 50, 10);
+
             new AlertDialog.Builder(this)
-                    .setTitle("Confirm Deletion")
-                    .setMessage("Type DELETE to confirm account deletion")
-                    .setView(createDeleteConfirmationInput())
-                    .setPositiveButton("Confirm", null) // Set later to prevent auto-dismiss
-                    .setNegativeButton("Cancel", null)
+                    .setTitle(R.string.dialog_delete_confirm_title)
+                    .setMessage(R.string.dialog_delete_type_delete_message)
+                    .setView(etConfirm)
+                    .setPositiveButton(R.string.dialog_confirm_button, (dialog, which) -> {
+                        if (etConfirm.getText().toString().equals("DELETE")) {
+                            deleteUserData(user.getUid());
+                        } else {
+                            Toast.makeText(this, R.string.delete_confirmation_incorrect, Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .setNegativeButton(R.string.dialog_cancel, null)
                     .show();
         } else {
             // For email users, require password
             EditText etPassword = new EditText(this);
-            etPassword.setHint("Enter your password");
+            etPassword.setHint(R.string.dialog_enter_password_hint);
             etPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
             etPassword.setPadding(50, 40, 50, 10);
 
             new AlertDialog.Builder(this)
-                    .setTitle("Confirm Password")
-                    .setMessage("Enter your password to confirm account deletion")
+                    .setTitle(R.string.dialog_confirm_password_title)
+                    .setMessage(R.string.dialog_confirm_password_message)
                     .setView(etPassword)
-                    .setPositiveButton("Delete Account", (dialog, which) -> {
+                    .setPositiveButton(R.string.dialog_delete_account_button, (dialog, which) -> {
                         String password = etPassword.getText().toString().trim();
                         if (!password.isEmpty()) {
                             deleteAccount(password);
                         } else {
-                            Toast.makeText(this, "Password required", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(this, R.string.password_required, Toast.LENGTH_SHORT).show();
                         }
                     })
-                    .setNegativeButton("Cancel", null)
+                    .setNegativeButton(R.string.dialog_cancel, null)
                     .show();
         }
-    }
-
-    private EditText createDeleteConfirmationInput() {
-        EditText etConfirm = new EditText(this);
-        etConfirm.setHint("Type DELETE");
-        etConfirm.setPadding(50, 40, 50, 10);
-        return etConfirm;
     }
 
     private void deleteAccount(String password) {
@@ -366,7 +391,7 @@ public class SettingsActivity extends AppCompatActivity {
                 .addOnSuccessListener(aVoid -> deleteUserData(user.getUid()))
                 .addOnFailureListener(e -> {
                     showLoading(false);
-                    Toast.makeText(this, "Incorrect password", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, R.string.password_incorrect, Toast.LENGTH_SHORT).show();
                 });
     }
 
@@ -383,7 +408,7 @@ public class SettingsActivity extends AppCompatActivity {
                 })
                 .addOnFailureListener(e -> {
                     showLoading(false);
-                    Toast.makeText(this, "Error deleting items: " + e.getMessage(),
+                    Toast.makeText(this, getString(R.string.delete_error_items, e.getMessage()),
                             Toast.LENGTH_SHORT).show();
                 });
     }
@@ -434,7 +459,7 @@ public class SettingsActivity extends AppCompatActivity {
                 .addOnSuccessListener(aVoid -> deleteFirebaseUser())
                 .addOnFailureListener(e -> {
                     showLoading(false);
-                    Toast.makeText(this, "Error deleting profile: " + e.getMessage(),
+                    Toast.makeText(this, getString(R.string.delete_error_profile, e.getMessage()),
                             Toast.LENGTH_SHORT).show();
                 });
     }
@@ -445,7 +470,7 @@ public class SettingsActivity extends AppCompatActivity {
             user.delete()
                     .addOnSuccessListener(aVoid -> {
                         showLoading(false);
-                        Toast.makeText(this, "Account deleted successfully", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, R.string.account_deleted_success, Toast.LENGTH_SHORT).show();
 
                         // Clear preferences
                         prefs.edit().clear().apply();
@@ -458,7 +483,7 @@ public class SettingsActivity extends AppCompatActivity {
                     })
                     .addOnFailureListener(e -> {
                         showLoading(false);
-                        Toast.makeText(this, "Error deleting account: " + e.getMessage(),
+                        Toast.makeText(this, getString(R.string.delete_error_account, e.getMessage()),
                                 Toast.LENGTH_LONG).show();
                     });
         }
@@ -467,6 +492,7 @@ public class SettingsActivity extends AppCompatActivity {
     private void showLoading(boolean show) {
         progressBar.setVisibility(show ? View.VISIBLE : View.GONE);
         btnChangePassword.setEnabled(!show);
+        btnLogout.setEnabled(!show);
         btnDeleteAccount.setEnabled(!show);
         btnBack.setEnabled(!show);
     }

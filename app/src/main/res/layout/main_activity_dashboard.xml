@@ -86,24 +86,6 @@
         app:layout_constraintVertical_bias="0.509" />
 
     <Button
-        android:id="@+id/btnBack"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/edittextstuff"
-        android:fontFamily="@font/montserrat"
-        android:text="@string/go_back"
-        android:textColor="#FFFFFF"
-        android:textColorHint="#808080"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.461"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.923"
-        tools:ignore="MissingConstraints" />
-
-    <Button
         android:id="@+id/btnInbox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
