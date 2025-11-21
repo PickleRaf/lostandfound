@@ -1,154 +1,188 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fillViewport="true">
 
-    <TextView
-        android:layout_width="299dp"
-        android:layout_height="34dp"
-        android:fontFamily="@font/montserrat"
-        android:text="@string/display_item_description"
-        android:textSize="25sp"
-        android:textStyle="bold"
-        android:textColor="#808080"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.142"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.065" />
-
-    <TextView
-        android:id="@+id/showDesc"
-        android:layout_width="369dp"
-        android:layout_height="206dp"
-        android:fontFamily="@font/montserrat"
-        android:text="@string/display_loading"
-        android:textSize="25sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.38"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.163" />
-
-    <TextView
-        android:layout_width="299dp"
-        android:layout_height="34dp"
-        android:fontFamily="@font/montserrat"
-        android:text="@string/display_location"
-        android:textColor="#808080"
-        android:textSize="25sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.142"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.459" />
-
-    <TextView
-        android:id="@+id/showLoc"
-        android:layout_width="369dp"
-        android:layout_height="206dp"
-        android:fontFamily="@font/montserrat"
-        android:text="@string/display_loading"
-        android:textSize="25sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.38"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.704" />
-
-    <Button
-        android:id="@+id/btnBackDLI"
-        android:layout_width="114dp"
-        android:layout_height="48dp"
-        android:background="@drawable/edittextstuff"
-        android:fontFamily="@font/montserrat"
-        android:text="@string/display_return"
-        android:textColor="#FFFFFF"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.053"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.888" />
-
-    <Button
-        android:id="@+id/itsminebtn"
-        android:layout_width="114dp"
-        android:layout_height="48dp"
-        android:background="@drawable/edittextstuff"
-        android:fontFamily="@font/montserrat"
-        android:text="@string/display_its_mine"
-        android:textColor="#FFFFFF"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.912"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.888" />
-
-    <!-- Add these buttons -->
-    <TextView
-        android:id="@+id/tvItemStatus"
-        android:layout_width="wrap_content"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/display_status_active"
-        android:textSize="16sp"
-        android:fontFamily="@font/montserrat"
-        android:textColor="#00FF00"
-        android:visibility="gone"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_margin="20dp"/>
+        android:padding="16dp">
 
-    <!-- Resolve Button -->
-    <Button
-        android:id="@+id/btnResolve"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/display_mark_as_resolved"
-        android:background="@drawable/edittextstuff"
-        android:fontFamily="@font/montserrat"
-        android:textColor="#FFFFFF"
-        android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@id/tvItemStatus"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="20dp"/>
+        <!-- Reporter Name -->
+        <TextView
+            android:id="@+id/tvReporterName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserrat"
+            android:text="Posted by: Loading..."
+            android:textSize="18sp"
+            android:textColor="#4CAF50"
+            android:visibility="gone"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="8dp"/>
 
-    <!-- Report User Button -->
-    <Button
-        android:id="@+id/btnReportUser"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/edittextstuff"
-        android:fontFamily="@font/montserrat"
-        android:text="@string/display_report_user"
-        android:textColor="#FF0000"
-        app:layout_constraintTop_toBottomOf="@id/btnResolve"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="20dp"/>
+        <!-- Reported Time -->
+        <TextView
+            android:id="@+id/tvReportedTime"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserrat"
+            android:text="Reported: Loading..."
+            android:textSize="18sp"
+            android:textColor="#808080"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@id/tvReporterName"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="4dp"/>
 
-    <!-- ProgressBar -->
-    <ProgressBar
-        android:id="@+id/progressBarDLI"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        <!-- Description Label -->
+        <TextView
+            android:id="@+id/labelDescription"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserrat"
+            android:text="@string/display_item_description"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="#808080"
+            app:layout_constraintTop_toBottomOf="@id/tvReportedTime"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="30dp"/>
 
+        <!-- Description Content -->
+        <TextView
+            android:id="@+id/showDesc"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserrat"
+            android:text="@string/display_loading"
+            android:textSize="18sp"
+            android:textColor="#FFFFFF"
+            app:layout_constraintTop_toBottomOf="@id/labelDescription"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="10dp"/>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <!-- Location Label -->
+        <TextView
+            android:id="@+id/labelLocation"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserrat"
+            android:text="@string/display_location"
+            android:textColor="#808080"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:layout_constraintTop_toBottomOf="@id/showDesc"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="30dp"/>
+
+        <!-- Location Content -->
+        <TextView
+            android:id="@+id/showLoc"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserrat"
+            android:text="@string/display_loading"
+            android:textSize="18sp"
+            android:textColor="#FFFFFF"
+            app:layout_constraintTop_toBottomOf="@id/labelLocation"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="10dp"/>
+
+        <!-- Status -->
+        <TextView
+            android:id="@+id/tvItemStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/display_status_active"
+            android:textSize="16sp"
+            android:fontFamily="@font/montserrat"
+            android:textColor="#00FF00"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@id/showLoc"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="16dp"/>
+
+        <!-- Resolve Button -->
+        <Button
+            android:id="@+id/btnResolve"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/display_mark_as_resolved"
+            android:background="@drawable/edittextstuff"
+            android:fontFamily="@font/montserrat"
+            android:textColor="#FFFFFF"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@id/tvItemStatus"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="16dp"/>
+
+        <!-- Report User Button -->
+        <Button
+            android:id="@+id/btnReportUser"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/edittextstuff"
+            android:fontFamily="@font/montserrat"
+            android:text="@string/display_report_user"
+            android:textColor="#FF0000"
+            app:layout_constraintTop_toBottomOf="@id/tvItemStatus"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="16dp"/>
+
+        <!-- Back Button -->
+        <Button
+            android:id="@+id/btnBackDLI"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:background="@drawable/edittextstuff"
+            android:fontFamily="@font/montserrat"
+            android:text="@string/display_return"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/itsminebtn"
+            app:layout_constraintTop_toBottomOf="@id/btnReportUser"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="8dp"/>
+
+        <!-- It's Mine Button -->
+        <Button
+            android:id="@+id/itsminebtn"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:background="@drawable/edittextstuff"
+            android:fontFamily="@font/montserrat"
+            android:text="@string/display_its_mine"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@id/btnBackDLI"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btnReportUser"
+            android:layout_marginTop="32dp"
+            android:layout_marginStart="8dp"/>
+
+        <!-- ProgressBar -->
+        <ProgressBar
+            android:id="@+id/progressBarDLI"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>
