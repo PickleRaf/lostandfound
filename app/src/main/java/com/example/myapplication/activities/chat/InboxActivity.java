@@ -9,7 +9,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -58,45 +57,12 @@ public class InboxActivity extends AppCompatActivity {
         });
         recyclerViewChats.setAdapter(adapter);
 
-        setupSwipeToDelete();
+        // Swipe-to-archive removal: setupSwipeToDelete() was deleted
+
         loadUserChats();
     }
 
-    private void setupSwipeToDelete() {
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(
-                0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
-            @Override
-            public boolean onMove(@NonNull RecyclerView recyclerView,
-                                  @NonNull RecyclerView.ViewHolder viewHolder,
-                                  @NonNull RecyclerView.ViewHolder target) {
-                return false;
-            }
-
-            @Override
-            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-                int position = viewHolder.getAdapterPosition();
-                ChatItem chat = chatList.get(position);
-
-                db.collection("chats").document(chat.getChatId())
-                        .update("archived_" + currentUserId, true)
-                        .addOnSuccessListener(aVoid -> {
-                            chatList.remove(position);
-                            adapter.notifyItemRemoved(position);
-
-                            if (chatList.isEmpty()) {
-                                showEmptyState(true);
-                            }
-
-                            Toast.makeText(InboxActivity.this, "Chat archived", Toast.LENGTH_SHORT).show();
-                        })
-                        .addOnFailureListener(e -> {
-                            adapter.notifyItemChanged(position);
-                            Toast.makeText(InboxActivity.this, "Failed to archive chat", Toast.LENGTH_SHORT).show();
-                        });
-            }
-        });
-        itemTouchHelper.attachToRecyclerView(recyclerViewChats);
-    }
+    // setupSwipeToDelete() method has been removed
 
     private void loadUserChats() {
         showLoading(true);
@@ -112,7 +78,6 @@ public class InboxActivity extends AppCompatActivity {
                         if (archived != null && archived) continue;
 
                         ChatItem chatItem = createChatItem(doc);
-                        // Current user is the claimer, so other user is the Finder
                         chatItem.setOtherUserRole("Finder");
                         chatList.add(chatItem);
                     }
@@ -146,16 +111,12 @@ public class InboxActivity extends AppCompatActivity {
 
                         if (!exists) {
                             ChatItem chatItem = createChatItem(doc);
-                            // Current user is the finder, so other user is the Claimer
                             chatItem.setOtherUserRole("Claimer");
                             chatList.add(chatItem);
                         }
                     }
 
-                    // Sort by timestamp (most recent first)
                     chatList.sort((a, b) -> Long.compare(b.getTimestamp(), a.getTimestamp()));
-
-                    // Load user names for all chats
                     loadUserNames();
                 })
                 .addOnFailureListener(e -> {
@@ -198,13 +159,10 @@ public class InboxActivity extends AppCompatActivity {
         AtomicInteger pendingRequests = new AtomicInteger(chatList.size());
 
         for (ChatItem chat : chatList) {
-            // Determine which user's name to fetch (the other user in the chat)
             String otherUserId;
             if (chat.getUserId().equals(currentUserId)) {
-                // Current user is claimer, fetch reporter's name
                 otherUserId = chat.getReporterId();
             } else {
-                // Current user is reporter, fetch claimer's name
                 otherUserId = chat.getUserId();
             }
 
@@ -232,7 +190,6 @@ public class InboxActivity extends AppCompatActivity {
                             chat.setOtherUserName("Unknown User");
                         }
 
-                        // Check if all requests are done
                         if (pendingRequests.decrementAndGet() == 0) {
                             finishLoading();
                         }
