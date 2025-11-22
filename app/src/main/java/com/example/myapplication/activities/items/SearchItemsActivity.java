@@ -126,12 +126,11 @@ public class SearchItemsActivity extends AppCompatActivity {
                         String itemID = doc.getId();
                         String status = doc.getString("status");
 
-                        // Only show active items (not resolved)
-                        if (status == null || !status.equals("resolved")) {
-                            if (title != null && desc != null && loc != null) {
-                                fetchedItems.add(new Item(title, desc, loc, userid, itemID));
-                            }
+
+                        if (title != null && desc != null && loc != null) {
+                            fetchedItems.add(new Item(title, desc, loc, userid, itemID));
                         }
+
                     }
 
                     // Show empty state if no items

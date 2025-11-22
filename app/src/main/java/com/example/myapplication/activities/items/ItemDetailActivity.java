@@ -192,7 +192,8 @@ public class ItemDetailActivity extends AppCompatActivity {
                             btnMsg.setEnabled(false);
                             btnResolve.setVisibility(View.GONE);
                         } else {
-                            tvStatus.setVisibility(View.GONE);
+                            tvStatus.setText("Status: ACTIVE ");
+                            tvStatus.setVisibility(View.VISIBLE);
                             btnResolve.setVisibility(currentUserId.equals(reporterId) ?
                                     View.VISIBLE : View.GONE);
                         }
