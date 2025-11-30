@@ -1,5 +1,6 @@
 package com.example.myapplication.activities.auth;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Patterns;
@@ -14,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.myapplication.activities.main.DashboardActivity;
 import com.example.myapplication.R;
+import com.example.myapplication.activities.profile.ProfileActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
@@ -27,8 +29,10 @@ public class LoginActivity extends AppCompatActivity {
     // UI elements
     private EditText usernameInput, passwordInput;
     private Button btnStart;
+    private Button forgotPasswordButton;
     private ProgressBar progressBar;
 
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +46,7 @@ public class LoginActivity extends AppCompatActivity {
         passwordInput = findViewById(R.id.etPassword);
         btnStart = findViewById(R.id.btnStart);
         progressBar = findViewById(R.id.progressBar);
+        forgotPasswordButton = findViewById(R.id.forgotpword);
 
         // EMAIL/PASSWORD LOGIN BUTTON
         btnStart.setOnClickListener(v -> {
@@ -84,6 +89,11 @@ public class LoginActivity extends AppCompatActivity {
                             }
                         }
                     });
+        });
+
+        forgotPasswordButton.setOnClickListener(v -> {
+            Intent intent = new Intent(LoginActivity.this, ResetActivity.class);
+            startActivity(intent);
         });
 
         // REGISTER BUTTON - Navigate to registration screen
